@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { questions } from "@/data/questions";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
-import { Heart, Shield, Sparkles, Leaf, Activity } from "lucide-react";
+import { Heart, Shield, Sparkles, Activity, Lock, Share2, Download as DownloadIcon } from "lucide-react";
+import html2canvas from "html2canvas";
 
 const dimensionMap = {
   NS: "자극추구", HA: "위험회피", RD: "사회적 민감성", P: "인내력",
@@ -13,8 +14,8 @@ const dimensionMap = {
 };
 
 const dimensionColors = {
-  NS: "#3b82f6", HA: "#f97316", RD: "#ec4899", P: "#22c55e",
-  SD: "#06b6d4", C: "#a855f7", ST: "#8b5cf6"
+  NS: "#60a5fa", HA: "#fb923c", RD: "#f472b6", P: "#4ade80",
+  SD: "#2dd4bf", C: "#c084fc", ST: "#a78bfa"
 };
 
 const calculateScores = (answers: number[]) => {
@@ -29,7 +30,7 @@ const calculateScores = (answers: number[]) => {
     counts[q.dimension] += 1;
   });
 
-  const processed = Object.keys(scores).map((key) => {
+  return Object.keys(scores).map((key) => {
     const k = key as keyof typeof scores;
     const avg = counts[k] > 0 ? (scores[k] / counts[k]) : 2.5;
     return { 
@@ -41,8 +42,6 @@ const calculateScores = (answers: number[]) => {
       color: dimensionColors[k]
     };
   });
-
-  return processed;
 };
 
 function ResultContent() {
@@ -51,6 +50,40 @@ function ResultContent() {
   const gender = searchParams.get("g") || "비공개";
   const age = searchParams.get("age") || "";
   const [data, setData] = useState<any[]>([]);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'TCI 기반 심층 감정 흐름 분석',
+          text: `${name}님의 프리미엄 감정 흐름 분석 결과를 확인해보세요!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error('Share failed', err);
+      }
+    } else {
+      // Fallback for desktop or unsupported browsers
+      navigator.clipboard.writeText(window.location.href);
+      alert('결과 링크가 클립보드에 복사되었습니다. 카카오톡에 붙여넣기 해주세요!');
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    if (!resultRef.current) return;
+    try {
+      const canvas = await html2canvas(resultRef.current, { scale: 2, useCORS: true, backgroundColor: '#fdfbf7' });
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `${name}_감정흐름분석.png`;
+      link.click();
+    } catch (err) {
+      console.error('Image capture failed', err);
+      alert('이미지 저장에 실패했습니다.');
+    }
+  };
 
   useEffect(() => {
     const a = searchParams.get("a");
@@ -61,15 +94,10 @@ function ResultContent() {
 
       // Save to localStorage
       const history = JSON.parse(localStorage.getItem("tci_history") || "[]");
-      // Check if this run is already saved (basic duplicate prevention by timestamp can't be used here directly, but we just save blindly for now)
       const newEntry = {
-        id: Date.now(),
-        name,
-        gender,
-        age,
+        id: Date.now(), name, gender, age,
         date: new Date().toLocaleDateString('ko-KR'),
-        answersString: a,
-        data: processed
+        answersString: a, data: processed
       };
       localStorage.setItem("tci_history", JSON.stringify([newEntry, ...history]));
     }
@@ -77,231 +105,193 @@ function ResultContent() {
 
   if (data.length === 0) return <div className="min-h-screen bg-[#fdfbf7]" />;
 
-  // Get top 4 dimensions
   const top4 = [...data].sort((a, b) => b.avgNum - a.avgNum).slice(0, 4);
 
   return (
-    <div className="pb-24">
-      {/* Hero Section */}
-      <div className="relative w-full h-[380px] bg-cover bg-center overflow-hidden" style={{ backgroundImage: 'url(/images/result_bg.png)' }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#fdfbf7]/100"></div>
+    <div className="pb-24 bg-[#fdfbf7] min-h-screen font-sans">
+      <div ref={resultRef}>
+        {/* Hero Section */}
+        <div className="relative w-full h-[450px] overflow-hidden bg-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-100/40 via-blue-50/30 to-pink-50/20"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-200/30 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-200/30 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
         
-        <div className="relative z-10 p-12 max-w-5xl mx-auto h-full flex flex-col justify-center">
+        <div className="relative z-10 p-10 md:p-16 max-w-5xl mx-auto h-full flex flex-col justify-center items-center text-center">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-white/60 backdrop-blur border border-white/50 text-purple-600 text-xs font-semibold tracking-wider mb-6 shadow-sm">
+            EMOTIONAL INSIGHT REPORT
+          </div>
           <motion.h1 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-bold text-gray-900 mb-4"
+            initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-5xl font-light text-gray-800 mb-6 tracking-tight leading-tight"
           >
-            {name} 님의<br />TCI 검사 결과
+            <span className="font-semibold text-purple-700">{name}</span> 님의<br/>
+            감정 흐름 분석 결과
           </motion.h1>
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="text-xl text-purple-700 italic font-serif mb-6"
-          >
-            사람과 의미를 중요하게 여기는<br />감정 분석형 관계 구조
-          </motion.h2>
           <motion.p 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="text-gray-600 max-w-md font-light mb-8"
+            initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="text-lg md:text-xl text-gray-500 font-light max-w-2xl leading-relaxed mb-8"
           >
-            따뜻한 공감과 높은 연대감으로 사람을 이해하고, 관계의 의미를 깊이 생각하는 섬세한 성향입니다.
+            "가까워질수록 감정의 의미를 깊게 받아들이며,<br className="hidden md:block"/>
+            관계의 미세한 거리감 변화에 예민하게 반응할 가능성이 있습니다."
           </motion.p>
           
-          <div className="flex gap-3 text-sm">
-            <span className="bg-white/80 backdrop-blur px-4 py-1.5 rounded-full text-gray-600 shadow-sm">👤 {gender}</span>
-            {age && <span className="bg-white/80 backdrop-blur px-4 py-1.5 rounded-full text-gray-600 shadow-sm">👤 {age}세</span>}
-            <span className="bg-white/80 backdrop-blur px-4 py-1.5 rounded-full text-gray-600 shadow-sm">📅 {new Date().toLocaleDateString('ko-KR')}</span>
+          <div className="flex gap-4 text-sm">
+            <span className="bg-white/50 backdrop-blur-md px-5 py-2 rounded-full text-gray-500 font-medium border border-white/40 shadow-sm">{gender}</span>
+            {age && <span className="bg-white/50 backdrop-blur-md px-5 py-2 rounded-full text-gray-500 font-medium border border-white/40 shadow-sm">{age}세</span>}
           </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-8 -mt-8 relative z-20">
+      <div className="max-w-4xl mx-auto px-6 -mt-12 relative z-20">
         
-        {/* Top 4 Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        {/* Free Section: Top Summary Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {top4.map((item, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }} 
-              className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.1 }} 
+              className="bg-white/80 backdrop-blur-lg p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white"
             >
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: item.color }}>
-                  <Heart className="w-3 h-3" />
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white" style={{ backgroundColor: item.color }}>
+                  <Heart className="w-4 h-4" />
                 </div>
-                <span className="font-semibold text-gray-700 text-sm">{item.name} ({item.key})</span>
+                <span className="font-semibold text-gray-700 text-sm">{item.name}</span>
               </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1">{item.avg}</div>
-              <div className="text-sm font-medium text-purple-600 mb-2">높은 편</div>
-              <p className="text-xs text-gray-500 leading-relaxed">
-                사람들과의 연결을 중요하게 여깁니다.
-              </p>
+              <div className="text-3xl font-light text-gray-800 mb-1">{item.avg}</div>
+              <p className="text-xs text-gray-400 font-medium tracking-wide">핵심 영향 요인</p>
             </motion.div>
           ))}
-          
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} 
-            className="bg-purple-50 p-5 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-purple-100 transition-colors"
-          >
-            <span className="text-purple-700 font-medium text-sm flex items-center gap-2">
-              전체 점수 보기 <ArrowRight className="w-4 h-4" />
-            </span>
-          </motion.div>
         </div>
 
-        {/* Charts Section */}
+        {/* Free Section: Charts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Bar Chart Area */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-800 mb-6">7가지 기질·성격 요약</h3>
-            <div className="flex justify-end text-xs text-gray-400 mb-4 gap-6 pr-4">
-              <span>원점수</span>
-              <span>평균(1-4)</span>
-            </div>
-            <div className="flex flex-col gap-4">
-              {data.map((item) => (
-                <div key={item.key} className="flex items-center gap-4">
-                  <div className="w-10 py-1 text-center rounded text-[10px] font-bold text-white" style={{ backgroundColor: item.color }}>
-                    {item.key}
-                  </div>
-                  <div className="w-20 text-sm text-gray-700">{item.name}</div>
-                  <div className="flex-1 bg-gray-100 h-2 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${(item.avgNum / 4) * 100}%`, backgroundColor: item.color }} />
-                  </div>
-                  <div className="w-12 text-right text-sm text-gray-600">{item.score}</div>
-                  <div className="w-12 text-right text-sm font-medium text-gray-800">{item.avg}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Radar Chart Area */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-800 mb-2">기질·성격 프로파일</h3>
-            <div className="w-full h-72">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="bg-white p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-50">
+            <h3 className="text-lg font-bold text-gray-800 mb-6">감정·기질 프로파일</h3>
+            <div className="w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data.map(d => ({ subject: d.key, A: d.avgNum, name: d.name }))}>
-                  <PolarGrid stroke="#e5e7eb" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#4b5563', fontSize: 11 }} />
-                  <Radar name="Score" dataKey="A" stroke="#a855f7" fill="#d8b4e2" fillOpacity={0.5} />
+                  <PolarGrid stroke="#f3f4f6" />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#9ca3af', fontSize: 11 }} />
+                  <Radar name="Score" dataKey="A" stroke="#a855f7" fill="#e9d5ff" fillOpacity={0.4} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </motion.div>
+          
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="bg-white p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-50">
+            <h3 className="text-lg font-bold text-gray-800 mb-6">세부 지표</h3>
+            <div className="flex flex-col gap-5">
+              {data.map((item) => (
+                <div key={item.key} className="flex items-center gap-4">
+                  <div className="w-10 text-xs font-bold text-gray-400">{item.key}</div>
+                  <div className="w-16 text-sm text-gray-600 font-medium">{item.name}</div>
+                  <div className="flex-1 bg-gray-50 h-2 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${(item.avgNum / 4) * 100}%`, backgroundColor: item.color }} />
+                  </div>
+                  <div className="w-8 text-right text-sm font-medium text-gray-800">{item.avg}</div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
 
-        {/* Highlights */}
-        <div className="mb-12">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex justify-between items-center">
-            심층 해석 하이라이트
-            <span className="text-sm font-medium text-purple-600 cursor-pointer">전체 보기 →</span>
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-              <Heart className="text-pink-500 mb-3 w-5 h-5" />
-              <h4 className="font-bold text-gray-800 mb-2">관계 스타일</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">사람의 감정과 성향을 세심하게 이해하며, 신뢰를 기반으로 한 관계를 선호해요.</p>
+        {/* Free Section: Short Conclusion */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="bg-gradient-to-br from-purple-50 to-white p-8 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-purple-100/50 mb-12 text-center">
+          <Sparkles className="w-8 h-8 text-purple-400 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-gray-800 mb-4">핵심 관계 패턴 분석</h3>
+          <p className="text-gray-600 leading-relaxed font-light mb-2">
+            겉으로는 안정적으로 상황을 이끌어가려 하지만,<br/>
+            속으로는 상대방의 말이나 태도가 의미하는 바를 오래 곱씹는 경향이 있습니다.
+          </p>
+          <p className="text-gray-600 leading-relaxed font-light">
+            갈등이 생겼을 때 바로 화를 내기보다 마음의 문을 먼저 닫아버림으로써 자신을 보호하려 합니다.
+          </p>
+        </motion.div>
+
+        {/* Full Report Section */}
+        <div className="relative">
+          <div className="bg-white p-10 md:p-14 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-50 text-gray-800 prose prose-purple max-w-none prose-p:font-light prose-p:leading-loose">
+            
+            <div className="text-center mb-16">
+              <span className="text-purple-600 font-semibold tracking-widest text-sm mb-4 block">DEEP ANALYSIS</span>
+              <h2 className="text-2xl md:text-3xl font-light text-gray-800">
+                왜 이런 감정 흐름이 반복되는 걸까요?
+              </h2>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-              <Activity className="text-green-500 mb-3 w-5 h-5" />
-              <h4 className="font-bold text-gray-800 mb-2">감정 패턴</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">상대의 반응을 깊이 분석하고 오래 되돌아보는 경향이 있어요.</p>
-            </div>
-            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-              <Shield className="text-blue-500 mb-3 w-5 h-5" />
-              <h4 className="font-bold text-gray-800 mb-2">스트레스 반응</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">불확실한 상황에서 불안이 높아질 수 있고 혼자 정리하는 시간이 필요해요.</p>
-            </div>
-            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-              <Sparkles className="text-purple-500 mb-3 w-5 h-5" />
-              <h4 className="font-bold text-gray-800 mb-2">성장 제안</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">자기 감정을 더 존중하고 표현하는 연습이 균형에 도움이 돼요.</p>
-            </div>
-          </div>
-        </div>
 
-        {/* Detailed Report Text */}
-        <div className="bg-white p-10 md:p-14 rounded-2xl shadow-sm border border-gray-100 text-gray-800 prose prose-purple max-w-none">
-          <h1 className="text-2xl font-bold border-b pb-4 mb-8 text-center text-purple-900">
-            {name} 님의 TCI 기반 심층 결과 분석
-          </h1>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">1. 전체 요약</h2>
-          <p className="leading-loose">
-            {name}님의 전체 구조에서 가장 먼저 눈에 들어오는 핵심은, “강한 자기통제와 책임감 위에 신중함이 얹혀 있는 안정 추구형 구조”라는 점입니다. 특히 P 인내력, SD 자율성, C 연대감이 모두 높게 형성되어 있어, 단순히 성실한 수준을 넘어 스스로의 역할과 책임을 매우 중요하게 받아들이는 흐름이 강하게 나타납니다.
-          </p>
-          <p className="leading-loose mt-4">
-            반면 NS 자극추구가 낮다는 점은 이 구조를 더욱 특징적으로 만듭니다. 새로운 자극이나 급격한 변화보다는 익숙함, 안정감, 예측 가능한 흐름 안에서 에너지를 유지하려는 경향이 매우 강할 가능성이 큽니다. 즉 “재미보다 안정”, “충동보다 책임”, “새로움보다 유지”에 가까운 심리 구조로 해석될 수 있습니다.
-          </p>
-          <p className="leading-loose mt-4">
-            전체적으로 {name}님은 감정이나 순간적 충동보다, “삶을 안정적으로 유지하는 것”에 훨씬 더 무게를 두는 타입에 가깝습니다. 누군가에게 쉽게 휘둘리기보다 스스로 기준을 세우고, 관계와 책임을 오래 유지하려는 방향성이 매우 강한 구조로 보입니다.
-          </p>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">2. 핵심 기질 구조</h2>
-          <p className="leading-loose">
-            {name}님의 가장 특징적인 부분은 낮은 NS 자극추구입니다. 이 점수는 단순히 “조용하다” 수준이 아니라, 삶 전체에서 변화와 불확실성을 상당히 피로하게 느낄 가능성을 의미합니다.
-          </p>
-          <ul className="list-disc pl-6 leading-loose mt-4 text-gray-700 bg-purple-50/50 p-6 rounded-xl">
-            <li>갑작스러운 변화보다 익숙한 흐름을 선호하고</li>
-            <li>감정 기복이 큰 환경에서 쉽게 피로를 느끼며</li>
-            <li>삶을 안정적으로 유지하려는 욕구가 강하고</li>
-            <li>위험 부담이 큰 선택을 오래 고민하는 경향이 있습니다.</li>
-          </ul>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">3. 성격 구조와 자기조절</h2>
-          <p className="leading-loose">
-            {name}님의 핵심 강점은 높은 SD 자율성과 C 연대감입니다. 자기 기준과 자기통제력이 매우 강한 구조를 의미합니다. 감정이 흔들리더라도 삶 전체가 쉽게 무너지기보다, 스스로 방향을 유지하려는 힘이 상당히 강할 가능성이 있습니다.
-          </p>
-          <p className="leading-loose mt-4">
-            동시에 C 연대감 역시 높습니다. 이는 사람을 대할 때 기본적인 배려와 책임감을 매우 중요하게 여긴다는 의미입니다. 다만 이 조합은 “남을 잘 챙기지만 자기 감정은 뒤로 미루는 패턴”으로 이어질 가능성도 있습니다.
-          </p>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">4. 감정과 스트레스 반응</h2>
-          <p className="leading-loose">
-            감정이 올라왔을 때 즉각적으로 표현하기보다, 먼저 스스로 통제하고 정리하려는 흐름이 매우 강할 가능성이 있습니다.
-            감정 피로가 누적될 경우 말수가 줄어들고, 혼자 정리하려는 시간이 길어지며, 관계 에너지를 줄이기 시작할 수 있습니다. 겉으로는 굉장히 안정적으로 보이지만 실제로는 혼자 오래 긴장하고 있을 가능성이 있습니다.
-          </p>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">5. 인간관계 패턴</h2>
-          <p className="leading-loose">
-            인간관계에서 자극적이고 불안정한 흐름보다, 신뢰와 안정감을 훨씬 중요하게 느낄 가능성이 큽니다. 감정 기복이 심하지 않고 말과 행동 차이가 적은 사람에게 편안함을 느낍니다. 반대로 감정 온도가 자주 바뀌거나 예측 불가능한 태도를 보이는 사람에게는 빠르게 피로를 느낄 수 있습니다.
-          </p>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">6. 사고방식과 자기방어</h2>
-          <p className="leading-loose">
-            사고 흐름은 매우 현실적이고 안정 지향적인 편입니다. 자기방어 방식은 자기통제, 감정 억제, 혼자 정리하기, 관계 유지 중심 사고 방향으로 나타날 가능성이 큽니다. 갈등 상황에서도 바로 감정을 폭발시키기보다 상황을 조용히 정리하려 합니다.
-          </p>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">7. 장점과 잠재적 취약점</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-            <div className="bg-green-50 p-6 rounded-xl">
-              <h4 className="font-bold text-green-800 mb-3 flex items-center gap-2"><Sparkles className="w-4 h-4"/> 장점</h4>
-              <ul className="list-disc pl-5 text-sm leading-relaxed text-green-900">
-                <li>매우 높은 책임감</li>
-                <li>꾸준함과 지속력</li>
-                <li>안정적인 관계 유지 능력</li>
-                <li>현실적인 판단력</li>
-                <li>높은 자기통제력</li>
-              </ul>
-            </div>
-            <div className="bg-red-50 p-6 rounded-xl">
-              <h4 className="font-bold text-red-800 mb-3 flex items-center gap-2"><Shield className="w-4 h-4"/> 잠재적 취약점</h4>
-              <ul className="list-disc pl-5 text-sm leading-relaxed text-red-900">
-                <li>감정을 오래 누적할 가능성</li>
-                <li>자기 피로를 늦게 인식할 가능성</li>
-                <li>변화 자체를 지나치게 부담스럽게 느낌</li>
-                <li>스트레스를 혼자 감당하려는 경향</li>
-              </ul>
-            </div>
-          </div>
-
-          <h2 className="text-xl font-bold text-purple-800 mt-10 mb-4">8. 종합 결론</h2>
-          <div className="bg-gradient-to-r from-purple-100 to-indigo-50 p-8 rounded-2xl border border-purple-200 text-center">
-            <p className="text-lg font-medium text-purple-900 leading-relaxed">
-              “강한 책임감과 자기통제를 바탕으로, 안정과 신뢰를 유지하려는 현실형 구조”
+            <h3 className="text-xl font-bold text-gray-800 mt-10 mb-6 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-sm">1</span>
+              숨겨진 감정 피로 구조
+            </h3>
+            <p>
+              {name}님은 기본적으로 다른 사람들의 감정선에 잘 맞춰주는 편입니다. 하지만 이것이 본인이 편해서라기보다, 
+              "관계가 어색해지거나 갈등이 생기는 상황 자체를 피로하게 느끼기 때문"일 가능성이 큽니다. 
+              따라서 남들이 보기에는 성격이 좋아 보일 수 있지만, 정작 혼자 있을 때는 사람을 만나는 것 자체가 
+              막대한 에너지 소모로 다가오곤 합니다.
             </p>
-            <p className="mt-4 text-purple-800 text-sm leading-loose">
-              {name}님은 감정보다 책임과 안정감을 중요하게 여기고, 스스로 삶의 균형을 유지하려 노력하는 분입니다. 겉으로는 차분해 보이지만 내면의 긴장을 조절하는 스스로의 힘을 가끔은 온전히 내려놓고 쉬어가는 시간이 필요합니다.
+
+            <h3 className="text-xl font-bold text-gray-800 mt-12 mb-6 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm">2</span>
+              관계 거리감 민감도
+            </h3>
+            <p>
+              매우 특징적인 부분은, 타인과의 '심리적 거리감'이 조금이라도 달라지는 것을 귀신같이 캐치한다는 점입니다. 
+              어제까지 다정했던 사람이 오늘 미묘하게 온도가 낮아지면, 그 이유를 내 안에서 찾으려 하며 하루 종일 그 생각에 
+              사로잡힐 수 있습니다. 이는 사람에 대한 집착이 아니라, 내 환경의 '예측 가능성'이 깨진 것에 대한 불안 반응입니다.
             </p>
+
+            <h3 className="text-xl font-bold text-gray-800 mt-12 mb-6 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-sm">3</span>
+              왜 특정 관계를 오래 못 놓을까?
+            </h3>
+            <p>
+              논리적으로는 끝난 관계라는 것을 알면서도 마음이 쉽게 정리되지 않는 이유는, 그 사람이 특별해서라기보다 
+              "내가 온전히 마음을 열고 안심했던 그 상태" 자체를 상실하는 것이 두렵기 때문입니다. 
+              {name}님에게 누군가에게 마음을 푹 놓는다는 것은 엄청난 에너지가 필요한 일이기 때문에, 
+              그 베이스캠프가 사라지는 것에 대한 심리적 저항감이 매우 크게 나타납니다.
+            </p>
+
+            <h3 className="text-xl font-bold text-gray-800 mt-12 mb-6 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm">4</span>
+              나를 지키는 방어 기제
+            </h3>
+            <p>
+              상처를 받았을 때 화를 내거나 따지기보다는, 조용히 마음속으로 선을 긋고 상대방에 대한 기대를 거두는 방식을 취합니다. 
+              겉으로는 평소와 다름없이 대하지만 속으로는 이미 수천 킬로미터 멀어져 있는 상태입니다. 
+              이는 갈등으로 인한 추가적인 감정 소모를 막기 위한 가장 안전하고도 슬픈 방어 기제입니다.
+            </p>
+            
+            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-8 md:p-10 rounded-3xl border border-purple-100 mt-16 text-center">
+              <h4 className="font-bold text-purple-900 mb-4">Therapist's Note</h4>
+              <p className="text-purple-800/80 text-sm md:text-base">
+                {name}님, 당신은 너무 많은 것을 담아두고 스스로 소화하려 애쓰고 있습니다.<br/>
+                때로는 상대방의 감정을 책임지려는 그 무거운 짐을 내려놓으셔도 괜찮습니다.<br/>
+                당신의 감정 흐름은 예민한 것이 아니라, 그만큼 세상을 섬세하게 느끼는 아름다운 능력입니다.
+              </p>
+            </div>
+
           </div>
         </div>
+      </div>
+        
+      {/* Share and Download Buttons */}
+        <div className="mt-12 flex flex-col md:flex-row gap-4 justify-center">
+          <button 
+            onClick={handleShare}
+            className="flex items-center justify-center gap-2 px-8 py-4 bg-[#FEE500] hover:bg-[#FDD800] text-[#3C1E1E] font-semibold rounded-2xl shadow-sm transition-all"
+          >
+            <Share2 className="w-5 h-5" />
+            카카오톡으로 결과 공유하기
+          </button>
+          
+          <button 
+            onClick={handleDownloadImage}
+            className="flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-semibold rounded-2xl shadow-sm transition-all"
+          >
+            <DownloadIcon className="w-5 h-5" />
+            이미지로 저장하기
+          </button>
+        </div>
+
       </div>
     </div>
   );
@@ -314,7 +304,3 @@ export default function ResultPage() {
     </Suspense>
   );
 }
-
-const ArrowRight = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-)

@@ -1,20 +1,36 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ClipboardList, BarChart2, Clock, BookOpen, Crown } from "lucide-react";
+import { Home, ClipboardList, BarChart2, BookOpen, Crown } from "lucide-react";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check initial state
+    setIsAdmin(sessionStorage.getItem("isAdmin") === "true");
+
+    // Listen for custom login event
+    const handleAdminChange = () => {
+      setIsAdmin(sessionStorage.getItem("isAdmin") === "true");
+    };
+    window.addEventListener("adminLoginStatusChanged", handleAdminChange);
+    return () => window.removeEventListener("adminLoginStatusChanged", handleAdminChange);
+  }, []);
 
   const navItems = [
     { href: "/", label: "홈", icon: Home },
+    { href: "/guide", label: "가이드", icon: BookOpen },
     { href: "/test", label: "검사하기", icon: ClipboardList },
     { href: "/result", label: "결과보기", icon: BarChart2 },
-    { href: "/history", label: "내 기록", icon: Clock },
-    { href: "/guide", label: "가이드", icon: BookOpen },
-    { href: "/admin", label: "관리자 (데이터)", icon: ClipboardList },
   ];
+
+  if (isAdmin) {
+    navItems.push({ href: "/admin", label: "관리자 (데이터)", icon: ClipboardList });
+  }
 
   return (
     <aside className="w-64 bg-white/80 backdrop-blur-md border-r border-gray-100 flex flex-col justify-between h-screen fixed left-0 top-0 z-50">

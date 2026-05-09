@@ -35,53 +35,59 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-[#fdfbf7]">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-pastel-lavender opacity-40 blur-3xl" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-pastel-blue opacity-30 blur-3xl" />
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] rounded-full bg-purple-200/30 blur-[120px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] rounded-full bg-blue-100/30 blur-[120px]" />
+        <div className="absolute top-[20%] right-[20%] w-[40%] h-[40%] rounded-full bg-pink-100/20 blur-[100px]" />
       </div>
 
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
         className="max-w-xl w-full z-10"
       >
-        <div className="glass-card p-10 md:p-14 text-center">
-          <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-6 leading-tight tracking-tight">
+        <div className="bg-white/60 backdrop-blur-xl border border-white p-10 md:p-14 rounded-[2.5rem] shadow-[0_8px_40px_rgb(0,0,0,0.03)] text-center">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-purple-50 text-purple-600 text-xs font-semibold tracking-wider mb-8">
+            PREMIUM EMOTIONAL INSIGHT
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl font-light text-gray-800 mb-6 leading-tight tracking-tight">
             당신의 성격이 아니라,<br />
-            당신의 <span className="text-purple-600">감정 흐름</span>을 읽습니다.
+            당신의 <span className="font-semibold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">감정 흐름</span>을 읽습니다.
           </h1>
           
-          <p className="text-gray-500 mb-8 text-lg font-light leading-relaxed">
-            프리미엄 상담 수준의 심층 결과지를 받아보세요.
+          <p className="text-gray-500 mb-10 text-lg font-light leading-relaxed">
+            왜 특정 관계를 오래 못 놓는지,<br className="hidden md:block" />
+            당신의 심리 구조 안에서 다정하게 설명해 드립니다.
           </p>
 
-          <div className="flex flex-col gap-4 mb-8 text-left">
+          <div className="flex flex-col gap-5 mb-10 text-left">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">이름 (닉네임)</label>
+              <label className="block text-xs font-medium text-gray-500 mb-2 ml-1 tracking-wide uppercase">Name</label>
               <input 
                 type="text" 
-                placeholder="이름을 입력하세요" 
+                placeholder="이름 (닉네임)" 
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
+                className="w-full px-5 py-4 rounded-2xl bg-white/80 border border-gray-100 focus:border-purple-300 focus:ring-4 focus:ring-purple-50 outline-none transition-all placeholder:text-gray-300 font-light"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">성별</label>
+                <label className="block text-xs font-medium text-gray-500 mb-2 ml-1 tracking-wide uppercase">Gender</label>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setGender('여성')}
-                    className={`flex-1 py-3 rounded-xl border transition-all ${gender === '여성' ? 'bg-purple-50 border-purple-400 text-purple-700 font-medium' : 'bg-white border-gray-200 text-gray-500'}`}
+                    className={`flex-1 py-4 rounded-2xl border transition-all font-light ${gender === '여성' ? 'bg-purple-50 border-purple-300 text-purple-700 font-medium' : 'bg-white/80 border-gray-100 text-gray-400 hover:bg-gray-50'}`}
                   >
                     여성
                   </button>
                   <button 
                     onClick={() => setGender('남성')}
-                    className={`flex-1 py-3 rounded-xl border transition-all ${gender === '남성' ? 'bg-purple-50 border-purple-400 text-purple-700 font-medium' : 'bg-white border-gray-200 text-gray-500'}`}
+                    className={`flex-1 py-4 rounded-2xl border transition-all font-light ${gender === '남성' ? 'bg-purple-50 border-purple-300 text-purple-700 font-medium' : 'bg-white/80 border-gray-100 text-gray-400 hover:bg-gray-50'}`}
                   >
                     남성
                   </button>
@@ -89,32 +95,32 @@ export default function Home() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">나이</label>
+                <label className="block text-xs font-medium text-gray-500 mb-2 ml-1 tracking-wide uppercase">Age</label>
                 <input 
                   type="number" 
-                  placeholder="나이 (숫자)" 
+                  placeholder="나이" 
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleStart()}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
+                  className="w-full px-5 py-4 rounded-2xl bg-white/80 border border-gray-100 focus:border-purple-300 focus:ring-4 focus:ring-purple-50 outline-none transition-all placeholder:text-gray-300 font-light"
                 />
               </div>
             </div>
           </div>
 
           <motion.button 
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleStart}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-4 px-8 rounded-xl shadow-lg shadow-purple-500/30 transition-all flex items-center justify-center group"
+            className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-medium py-4 px-8 rounded-2xl shadow-[0_8px_20px_rgb(147,51,234,0.2)] transition-all flex items-center justify-center group"
           >
-            <span>분석 시작하기</span>
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <span className="tracking-wide">감정 흐름 분석 시작하기</span>
+            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform opacity-80" />
           </motion.button>
           
-          <div className="mt-6 text-sm text-gray-400 font-light flex justify-center gap-4">
-            <span>49문항</span>
-            <span>•</span>
+          <div className="mt-6 text-xs text-gray-400 font-light flex justify-center gap-4 tracking-wider">
+            <span>총 49문항</span>
+            <span className="opacity-50">|</span>
             <span>약 10분 소요</span>
           </div>
         </div>

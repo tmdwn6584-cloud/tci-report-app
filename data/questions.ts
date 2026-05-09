@@ -6,66 +6,1444 @@ export interface Question {
 }
 
 export const questions: Question[] = [
-  // NS (자극추구) - 7문항
-  { id: "ns1", text: "새로운 환경이나 낯선 사람들과 어울리는 것을 즐기며, 규칙적인 일상보다는 변화를 선호한다.", dimension: "NS", reverse: false },
-  { id: "ns2", text: "예측 가능한 안정적인 삶보다는, 약간의 위험이 따르더라도 자극적인 도전을 해보고 싶다.", dimension: "NS", reverse: false },
-  { id: "ns3", text: "갑작스러운 계획 변경이나 예상치 못한 상황이 발생하면 스트레스보다는 흥미를 느낀다.", dimension: "NS", reverse: false },
-  { id: "ns4", text: "하던 일이 익숙해지면 금방 지루함을 느끼고 새로운 방식을 찾으려 노력한다.", dimension: "NS", reverse: false },
-  { id: "ns5", text: "돈이나 에너지를 소비할 때 즉흥적이고 충동적인 결정을 자주 내리는 편이다.", dimension: "NS", reverse: false },
-  { id: "ns6", text: "규칙이나 절차가 엄격한 곳에서는 심한 답답함을 느낀다.", dimension: "NS", reverse: false },
-  { id: "ns7", text: "무언가를 결정할 때 충분히 조사하기보다 나의 직감이나 기분에 따를 때가 많다.", dimension: "NS", reverse: false },
-  
-  // HA (위험회피) - 7문항
-  { id: "ha1", text: "상대방의 말투가 조금만 차가워져도 내가 무엇을 잘못했는지 하루 종일 고민하는 편이다.", dimension: "HA", reverse: false },
-  { id: "ha2", text: "중요한 결정을 내릴 때 최악의 상황을 먼저 생각하고, 실수를 극도로 두려워한다.", dimension: "HA", reverse: false },
-  { id: "ha3", text: "인간관계에서 갈등이 생길 조짐이 보이면, 먼저 피하거나 내 마음의 문을 닫아버리는 경우가 많다.", dimension: "HA", reverse: false },
-  { id: "ha4", text: "낯선 상황에 던져졌을 때, 기대감보다는 긴장감과 피로를 먼저 느낀다.", dimension: "HA", reverse: false },
-  { id: "ha5", text: "나쁜 일이 일어날지도 모른다는 생각에 사로잡혀 에너지를 소모하는 날이 잦다.", dimension: "HA", reverse: false },
-  { id: "ha6", text: "타인에게 거절당하거나 상처받는 것이 두려워, 내 의견을 먼저 말하는 것을 피한다.", dimension: "HA", reverse: false },
-  { id: "ha7", text: "어떤 일이든 완벽하게 준비되지 않으면 시작하기를 주저하게 된다.", dimension: "HA", reverse: false },
-  
-  // RD (사회적 민감성) - 7문항
-  { id: "rd1", text: "이미 끝난 관계라도, 그 사람이 나를 어떻게 기억할지 종종 떠올려보고 미련을 갖는다.", dimension: "RD", reverse: false },
-  { id: "rd2", text: "나에게 안정감을 주는 사람보다, 어딘가 결핍이 있어 내가 챙겨줘야 할 것 같은 사람에게 끌린다.", dimension: "RD", reverse: false },
-  { id: "rd3", text: "타인의 감정 변화를 아주 예민하게 캐치하며, 상대의 기분에 따라 내 하루의 기분도 크게 좌우된다.", dimension: "RD", reverse: false },
-  { id: "rd4", text: "내가 준 사랑이나 배려만큼 타인이 돌려주지 않으면 깊은 서운함을 느낀다.", dimension: "RD", reverse: false },
-  { id: "rd5", text: "누군가 나를 칭찬하고 인정해주면, 그 사람에게 더 많이 맞춰주고 싶어진다.", dimension: "RD", reverse: false },
-  { id: "rd6", text: "독립적으로 일하기보다 사람들과 정서적으로 교류하며 일할 때 에너지가 생긴다.", dimension: "RD", reverse: false },
-  { id: "rd7", text: "마음을 터놓고 의지할 수 있는 깊은 관계가 내 삶의 원동력이라고 생각한다.", dimension: "RD", reverse: false },
-  
-  // P (인내력) - 7문항
-  { id: "p1", text: "한번 시작한 일이나 맺은 관계는 상황이 어려워져도 쉽게 포기하지 않고 끝까지 유지하려 한다.", dimension: "P", reverse: false },
-  { id: "p2", text: "피곤하고 지치더라도 내가 맡은 책임이나 역할은 완벽하게 끝내야 마음이 편하다.", dimension: "P", reverse: false },
-  { id: "p3", text: "아무리 노력해도 결과가 보이지 않을 때, 다른 대안을 찾기보다는 더 노력해서 돌파하려 한다.", dimension: "P", reverse: false },
-  { id: "p4", text: "과거의 성공 경험을 떠올리며, 현재의 고난을 묵묵히 버텨내는 힘이 강하다.", dimension: "P", reverse: false },
-  { id: "p5", text: "주변 사람들이 포기하라고 만류해도, 내 스스로 만족할 때까지는 일을 멈추지 않는다.", dimension: "P", reverse: false },
-  { id: "p6", text: "어려운 과제가 주어질수록 오히려 해내고 싶다는 강한 오기가 생긴다.", dimension: "P", reverse: false },
-  { id: "p7", text: "게으름을 피우는 것을 스스로 용납하지 못하며, 항상 무언가 생산적인 일을 해야 직성이 풀린다.", dimension: "P", reverse: false },
-  
-  // SD (자율성) - 7문항
-  { id: "sd1", text: "내 감정을 있는 그대로 표출하기보다, 상황과 내 목표에 맞게 감정을 통제하고 조절하는 데 능숙하다.", dimension: "SD", reverse: false },
-  { id: "sd2", text: "다른 사람들이 나를 어떻게 생각하는지보다, 내 스스로 세운 가치관과 기준에 부합하는지가 훨씬 중요하다.", dimension: "SD", reverse: false },
-  { id: "sd3", text: "실패를 겪더라도 누군가를 탓하기보다 내 스스로의 선택이었다고 받아들이고 다음을 준비한다.", dimension: "SD", reverse: false },
-  { id: "sd4", text: "타인의 도움이나 조언 없이도 내 인생의 방향을 스스로 명확하게 설정할 수 있다.", dimension: "SD", reverse: false },
-  { id: "sd5", text: "내가 하는 일의 의미와 목적을 나 자신 안에서 찾으며, 외부의 보상에 크게 흔들리지 않는다.", dimension: "SD", reverse: false },
-  { id: "sd6", text: "과거의 상처에 얽매이기보다, 현재 내가 바꿀 수 있는 것에 집중하는 편이다.", dimension: "SD", reverse: false },
-  { id: "sd7", text: "나의 단점을 잘 알고 있으며, 이를 외면하기보다 건설적으로 개선하려고 노력한다.", dimension: "SD", reverse: false },
-  
-  // C (연대감) - 7문항
-  { id: "c1", text: "나에게 별다른 이득이 없더라도, 곤란에 처한 사람을 보면 기꺼이 내 시간과 에너지를 써서 돕고 싶다.", dimension: "C", reverse: false },
-  { id: "c2", text: "모든 사람은 서로 연결되어 있으며, 타인의 아픔에 깊이 공감하고 이를 덜어주고 싶은 마음이 크다.", dimension: "C", reverse: false },
-  { id: "c3", text: "관계를 맺을 때 나의 필요조건을 따지기보다, 서로 신뢰하고 존중하며 진심을 나누는 것이 가장 중요하다.", dimension: "C", reverse: false },
-  { id: "c4", text: "경쟁을 통해 누군가를 이기는 것보다, 함께 협력하여 공동의 목표를 달성하는 것에 더 큰 보람을 느낀다.", dimension: "C", reverse: false },
-  { id: "c5", text: "비록 나와 가치관이 다른 사람일지라도, 그의 입장에서 이해해보려고 진지하게 노력한다.", dimension: "C", reverse: false },
-  { id: "c6", text: "다른 사람의 성공이나 행복을 진심으로 기뻐해 줄 수 있다.", dimension: "C", reverse: false },
-  { id: "c7", text: "내가 한 행동이 타인이나 세상에 어떤 영향을 미칠지 항상 신중하게 고려한다.", dimension: "C", reverse: false },
-  
-  // ST (자기초월) - 7문항
-  { id: "st1", text: "이해관계나 현실적인 이익을 넘어서, 삶의 근원적인 의미나 영적인 가치에 대해 깊이 생각하는 편이다.", dimension: "ST", reverse: false },
-  { id: "st2", text: "사람들과 함께 있는 시간이 즐겁지만, 모임이 끝나고 집에 돌아오면 이유 모를 깊은 피로감과 허무함을 느끼곤 한다.", dimension: "ST", reverse: false },
-  { id: "st3", text: "가끔은 내 자신이 우주나 자연의 아주 작은 일부로 느껴지며, 그 거대한 흐름에 나를 맡기고 싶을 때가 있다.", dimension: "ST", reverse: false },
-  { id: "st4", text: "아름다운 예술 작품이나 자연 풍경을 마주할 때, 자아를 잃어버릴 정도로 깊이 몰입하곤 한다.", dimension: "ST", reverse: false },
-  { id: "st5", text: "합리적이고 과학적인 설명으로는 풀리지 않는 신비로운 일들이 세상에 존재한다고 믿는다.", dimension: "ST", reverse: false },
-  { id: "st6", text: "나에게 일어나는 우연한 사건들이 사실은 어떤 거대한 의미를 내포하고 있을 것이라 생각한다.", dimension: "ST", reverse: false },
-  { id: "st7", text: "물질적인 성취보다 정신적인 성숙과 평화를 얻는 것이 인생의 궁극적인 목표라 생각한다.", dimension: "ST", reverse: false }
+  {
+    "id": "ns_f_0",
+    "dimension": "NS",
+    "text": "새로운 환경에서는 긴장보다 호기심이 먼저 생기는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_0",
+    "dimension": "HA",
+    "text": "중요한 일이 있으면 걱정이 먼저 올라오는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_0",
+    "dimension": "RD",
+    "text": "다른 사람의 사소한 칭찬 한마디에 하루 종일 기분이 좋아진다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_0",
+    "dimension": "P",
+    "text": "아무리 지루한 일이라도 끝까지 해내는 데 익숙하다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_0",
+    "dimension": "SD",
+    "text": "내 인생의 방향과 가치관은 다른 누구도 아닌 나 자신이 결정한다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_0",
+    "dimension": "C",
+    "text": "나와 전혀 다른 입장에 있는 사람의 감정이나 상황을 쉽게 이해할 수 있다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_0",
+    "dimension": "ST",
+    "text": "가끔 내 자신이 우주나 자연의 아주 작은 일부로 느껴지며 알 수 없는 경이로움을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_1",
+    "dimension": "NS",
+    "text": "반복되는 루틴이 오래 지속되면 쉽게 답답함을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_1",
+    "dimension": "HA",
+    "text": "실수 가능성이 보이면 긴장이 커지는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_1",
+    "dimension": "RD",
+    "text": "누군가 나를 인정해주면 에너지가 크게 솟아오르는 것을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_1",
+    "dimension": "P",
+    "text": "감정적으로 힘들어도 맡은 역할은 어떻게든 완수하려 한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_1",
+    "dimension": "SD",
+    "text": "어려운 상황에서도 감정에 휩쓸리지 않고 이성적으로 판단하려 애쓴다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_1",
+    "dimension": "C",
+    "text": "경쟁해서 누군가를 이기는 것보다 다 함께 협력하여 좋은 결과를 내는 것이 좋다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_1",
+    "dimension": "ST",
+    "text": "논리나 과학으로 설명할 수 없는 신비로운 현상이나 영적인 세계에 깊은 관심이 있다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_2",
+    "dimension": "NS",
+    "text": "새로운 경험을 하면 에너지가 살아나는 느낌이 든다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_2",
+    "dimension": "HA",
+    "text": "미래 상황을 미리 걱정하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_2",
+    "dimension": "RD",
+    "text": "상대방이 나에게 차갑게 대하면 깊은 감정적 타격을 받는다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_2",
+    "dimension": "P",
+    "text": "포기하고 싶은 순간에도 이를 악물고 버티는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_2",
+    "dimension": "SD",
+    "text": "문제가 발생했을 때 남을 탓하기보다 내가 해결할 수 있는 부분을 찾는다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_2",
+    "dimension": "C",
+    "text": "곤란에 처한 사람을 보면 내가 조금 손해를 보더라도 도와주고 싶은 마음이 든다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_2",
+    "dimension": "ST",
+    "text": "아름다운 풍경, 음악, 예술 작품을 접할 때 나라는 존재를 잊을 만큼 강렬하게 몰입한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_3",
+    "dimension": "NS",
+    "text": "같은 패턴이 계속되면 집중력이 떨어지는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_3",
+    "dimension": "HA",
+    "text": "작은 문제도 오래 신경 쓰일 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_3",
+    "dimension": "RD",
+    "text": "가까운 사람이 내 감정에 공감해주지 않으면 심하게 서운해진다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_3",
+    "dimension": "P",
+    "text": "관계에서 상처받아도 쉽게 관계의 끈을 놓지 못한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_3",
+    "dimension": "SD",
+    "text": "나의 장단점을 있는 그대로 인정하고 스스로를 성찰하는 시간을 갖는다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_3",
+    "dimension": "C",
+    "text": "상대방이 굳이 말하지 않아도 그 사람이 느끼는 슬픔이나 아픔이 내게 전해진다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_3",
+    "dimension": "ST",
+    "text": "우연히 일어난 사건이나 만남 속에서도 삶의 깊은 의미나 어떤 메시지가 있다고 믿는다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_4",
+    "dimension": "NS",
+    "text": "감정적으로 살아 있는 느낌을 중요하게 생각한다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_4",
+    "dimension": "HA",
+    "text": "불확실한 상황에서는 쉽게 긴장하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_4",
+    "dimension": "RD",
+    "text": "타인과 감정적으로 연결되어 있다는 느낌을 매우 중요하게 생각한다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_4",
+    "dimension": "P",
+    "text": "남들이 불가능하다고 해도 내 방식대로 끝까지 밀어붙일 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_4",
+    "dimension": "SD",
+    "text": "사회적인 기준보다 내 스스로 세운 원칙과 기준에 따라 행동한다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_4",
+    "dimension": "C",
+    "text": "다른 사람에게 상처를 주었을 때 상대방보다 내 마음이 더 무겁고 고통스럽다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_4",
+    "dimension": "ST",
+    "text": "물질적인 성공이나 명예를 쫓기보다는 내면의 평화와 정신적인 깨달음이 훨씬 중요하다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_5",
+    "dimension": "NS",
+    "text": "계획되지 않은 상황에서도 즉흥적으로 움직일 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_5",
+    "dimension": "HA",
+    "text": "상대 반응이 달라지면 이유를 오래 생각하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_5",
+    "dimension": "RD",
+    "text": "내가 베푼 호의에 상대가 무관심할 때 상처를 오래 간직한다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_5",
+    "dimension": "P",
+    "text": "원하는 결과를 얻기 위해 당장의 불편함과 스트레스를 잘 견딘다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_5",
+    "dimension": "SD",
+    "text": "타인의 기대에 부응하기 위해 내 핵심 가치관을 타협하지는 않는다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_5",
+    "dimension": "C",
+    "text": "모든 사람은 그 자체로 존중받아야 하며 함부로 판단해서는 안 된다고 생각한다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_5",
+    "dimension": "ST",
+    "text": "세상의 모든 생명체는 보이지 않는 에너지나 끈으로 서로 깊게 연결되어 있다고 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_6",
+    "dimension": "NS",
+    "text": "익숙한 방식만 반복되면 쉽게 흥미를 잃는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_6",
+    "dimension": "HA",
+    "text": "실패 가능성이 느껴지면 쉽게 위축될 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_6",
+    "dimension": "RD",
+    "text": "따뜻한 말 한마디가 논리적인 조언보다 훨씬 더 큰 위로가 된다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_6",
+    "dimension": "P",
+    "text": "시간이 오래 걸리더라도 목표한 바는 이루고 마는 성격이다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_6",
+    "dimension": "SD",
+    "text": "과거의 상처에 얽매이기보다 앞으로 어떻게 나아갈지에 더 집중한다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_6",
+    "dimension": "C",
+    "text": "내 주변 사람들이 기뻐하고 행복해할 때 나 역시 깊은 충만감을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_6",
+    "dimension": "ST",
+    "text": "혼자 조용히 명상하거나 일상의 번잡함에서 벗어나 깊은 생각에 잠기는 시간을 사랑한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_7",
+    "dimension": "NS",
+    "text": "예상하지 못한 변화가 생겨도 의외로 재미를 느끼는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_7",
+    "dimension": "HA",
+    "text": "사람 관계가 흔들리는 상황에 민감한 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_7",
+    "dimension": "RD",
+    "text": "사람들과 감정을 나누지 않으면 마음이 쉽게 공허해진다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_7",
+    "dimension": "P",
+    "text": "감정이 완전히 바닥나더라도 내색하지 않고 일상을 유지할 수 있다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_7",
+    "dimension": "SD",
+    "text": "감정이 크게 동요하는 상황에서도 내 행동을 통제할 수 있다고 믿는다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_7",
+    "dimension": "C",
+    "text": "모임이나 조직 안에서 갈등이 생기면 어떻게든 중재하고 평화를 유지하려 애쓴다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_7",
+    "dimension": "ST",
+    "text": "인생의 고난이나 상실을 겪을 때, 그것이 내 영혼을 성장시키는 과정이라고 해석하곤 한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_8",
+    "dimension": "NS",
+    "text": "무난하고 안정적인 상황이 오래 지속되면 지루함이 쌓이는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_8",
+    "dimension": "HA",
+    "text": "예상과 다르게 흘러가면 불안감이 커지는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_8",
+    "dimension": "RD",
+    "text": "상대방의 말투가 미묘하게 달라지면 즉각적으로 반응하게 된다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_8",
+    "dimension": "P",
+    "text": "한 번 시작한 생각이나 감정에 깊게 빠지면 쉽게 빠져나오지 못한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_8",
+    "dimension": "SD",
+    "text": "누군가가 나를 오해하더라도 굳이 변명하기보다 내 방식대로 살아간다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_8",
+    "dimension": "C",
+    "text": "나의 이익보다 전체의 이익이나 조화를 우선시하여 양보할 때가 자주 있다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_8",
+    "dimension": "ST",
+    "text": "논리적인 판단보다 직관이나 예감, 마음속 깊은 곳에서 울리는 목소리를 더 신뢰할 때가 많다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_9",
+    "dimension": "NS",
+    "text": "감정 흐름이 없는 관계는 금방 무미건조하게 느껴질 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_9",
+    "dimension": "HA",
+    "text": "갈등 상황을 오래 신경 쓰는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_9",
+    "dimension": "RD",
+    "text": "타인에게 거절당하는 상황을 상상하는 것만으로도 긴장된다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_9",
+    "dimension": "P",
+    "text": "관계의 문제가 해결될 때까지 혼자서 계속 상황을 복기한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_9",
+    "dimension": "SD",
+    "text": "나의 선택으로 인해 벌어지는 결과에 대해서는 오롯이 책임을 진다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_9",
+    "dimension": "C",
+    "text": "다른 사람의 흠이나 단점을 들추기보다 그 사람의 장점과 선의를 먼저 보려 한다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_9",
+    "dimension": "ST",
+    "text": "때때로 시공간의 경계가 무너지고 세상과 내가 하나가 되는 듯한 신비로운 일체감을 경험한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_10",
+    "dimension": "NS",
+    "text": "새로운 장소에 가면 여기저기 둘러보게 되는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_10",
+    "dimension": "HA",
+    "text": "중요한 일을 앞두면 여러 번 확인하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_10",
+    "dimension": "RD",
+    "text": "나의 노력에 대해 주변에서 알아주기를 은근히 기대하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_10",
+    "dimension": "P",
+    "text": "성공보다 실패 확률이 높아 보여도 일단 계속해서 시도하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_10",
+    "dimension": "SD",
+    "text": "내면의 불안이나 두려움이 올라와도 그것에 압도당하지 않고 다스린다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_10",
+    "dimension": "C",
+    "text": "상대방의 의견이 나와 다르더라도 일단 끝까지 들어주고 수용하려 노력한다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_10",
+    "dimension": "ST",
+    "text": "일상의 아주 사소한 순간이나 평범한 사물에서도 거대한 우주의 신비와 아름다움을 발견한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_11",
+    "dimension": "NS",
+    "text": "충동적으로 새로운 취미를 시작할 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_11",
+    "dimension": "HA",
+    "text": "말을 보내기 전 표현을 여러 번 수정할 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_11",
+    "dimension": "RD",
+    "text": "애매한 관계가 지속되면 내 쪽에서 먼저 마음을 정리하기 어렵다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_11",
+    "dimension": "P",
+    "text": "지친 상태에서도 남들에게 약한 모습을 보이기 싫어 끝까지 버틴다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_11",
+    "dimension": "SD",
+    "text": "스스로의 성장을 위해 익숙하고 편안한 상황을 의도적으로 깰 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_11",
+    "dimension": "C",
+    "text": "누군가 부당한 대우를 받는 것을 보면 마치 내 일처럼 화가 나고 나설 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_11",
+    "dimension": "ST",
+    "text": "내가 이 세상에 태어난 데에는 단순한 생존 이상의 영적이거나 거대한 목적이 있다고 생각한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_12",
+    "dimension": "NS",
+    "text": "갑자기 계획을 바꾸고 싶은 마음이 들 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_12",
+    "dimension": "HA",
+    "text": "상대 반응을 먼저 살피고 행동하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_12",
+    "dimension": "RD",
+    "text": "가까운 사람이 다른 사람과 더 친해 보이면 미묘한 소외감을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_12",
+    "dimension": "P",
+    "text": "내가 선택한 사람이나 일에 대해서는 맹목적일 정도로 책임을 진다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_12",
+    "dimension": "SD",
+    "text": "사람들의 시선에 갇히기보다 내 마음이 진정으로 원하는 것을 추구한다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_12",
+    "dimension": "C",
+    "text": "사람들 사이의 미묘한 분위기나 감정선을 예민하게 감지하고 맞춰주는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_12",
+    "dimension": "ST",
+    "text": "눈에 보이는 현실 세계 이면에 보이지 않는 본질적이고 영원한 진리가 존재한다고 믿는다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_13",
+    "dimension": "NS",
+    "text": "흥미가 생기면 바로 행동으로 옮기는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_13",
+    "dimension": "HA",
+    "text": "문제가 생길 가능성을 미리 대비하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_13",
+    "dimension": "RD",
+    "text": "내가 좋아하는 사람이 나를 좋아해 줄 때 가장 큰 안정감을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_13",
+    "dimension": "P",
+    "text": "루틴이나 습관을 매우 철저하게 지키며, 그것이 무너지면 불편하다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_13",
+    "dimension": "SD",
+    "text": "감정이 복잡할 때는 혼자만의 시간을 가지며 생각을 정리하고 안정을 찾는다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_13",
+    "dimension": "C",
+    "text": "복수심이나 원한을 품기보다는 용서하고 좋은 관계를 회복하는 쪽을 선택한다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_13",
+    "dimension": "ST",
+    "text": "타인과 깊은 대화를 나눌 때 표면적인 말 너머에 있는 그 사람의 영혼과 닿는 느낌을 받는다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_14",
+    "dimension": "NS",
+    "text": "같은 일만 반복하면 에너지가 급격히 떨어질 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_14",
+    "dimension": "HA",
+    "text": "관계가 어색해지면 분위기를 먼저 확인하게 된다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_14",
+    "dimension": "RD",
+    "text": "카톡의 답장 속도나 이모티콘 유무에 따라 감정 상태가 흔들린다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_14",
+    "dimension": "P",
+    "text": "다른 사람들이 멈추는 지점에서도 나는 한 걸음 더 나아가려 한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_14",
+    "dimension": "SD",
+    "text": "나와 맞지 않는 사람과의 관계에서는 적절히 거리를 두며 나를 보호한다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_14",
+    "dimension": "C",
+    "text": "다른 사람을 돕는 일 자체에서 삶의 큰 의미와 보람을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_14",
+    "dimension": "ST",
+    "text": "죽음은 모든 것의 끝이 아니라 또 다른 차원으로의 전환이거나 우주로 돌아가는 과정이라 여긴다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_15",
+    "dimension": "NS",
+    "text": "새로운 사람과 대화하는 상황을 의외로 즐기는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_15",
+    "dimension": "HA",
+    "text": "사소한 말실수도 오래 떠올릴 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_15",
+    "dimension": "RD",
+    "text": "감정적인 교류가 없는 사무적인 관계는 오랫동안 유지하기 힘들다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_15",
+    "dimension": "P",
+    "text": "감정적인 소모가 크더라도 내가 시작한 관계는 끝을 보려 한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_15",
+    "dimension": "SD",
+    "text": "스트레스를 받는 상황에서도 내가 통제할 수 있는 것에 에너지를 집중한다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_15",
+    "dimension": "C",
+    "text": "사회적 약자나 소외된 사람들을 위한 일에 시간이나 에너지를 기꺼이 낼 수 있다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_15",
+    "dimension": "ST",
+    "text": "자연 속에 머물 때 내 안의 모든 상처가 치유되고 순수해지는 듯한 강력한 정화 작용을 겪는다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_16",
+    "dimension": "NS",
+    "text": "감정적으로 자극이 없는 환경에서는 무기력해질 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_16",
+    "dimension": "HA",
+    "text": "불편한 상황에서는 쉽게 긴장감이 올라오는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_16",
+    "dimension": "RD",
+    "text": "누군가에게 특별한 존재로 인정받고 싶은 욕구가 강한 편이다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_16",
+    "dimension": "P",
+    "text": "육체적, 정신적 한계에 부딪혀도 스스로를 채찍질하며 나아간다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_16",
+    "dimension": "SD",
+    "text": "성공과 실패의 원인을 외부 환경보다는 나의 노력과 태도에서 찾는다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_16",
+    "dimension": "C",
+    "text": "어떤 결정을 내릴 때 이것이 다른 사람들에게 어떤 영향을 미칠지 항상 고려한다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_16",
+    "dimension": "ST",
+    "text": "나의 존재가 과거의 조상들과 미래의 후손들을 잇는 거대한 흐름 속에 있다고 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_17",
+    "dimension": "NS",
+    "text": "반복되는 인간관계 패턴에 쉽게 질리는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_17",
+    "dimension": "HA",
+    "text": "부정적인 가능성을 먼저 상상하게 되는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_17",
+    "dimension": "RD",
+    "text": "사람들의 반응에 따라 나의 자존감이 크게 오르내리는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_17",
+    "dimension": "P",
+    "text": "쉬는 것보다 무언가 생산적인 일을 완수했을 때 진정한 안도를 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_17",
+    "dimension": "SD",
+    "text": "나쁜 습관을 고치거나 좋은 습관을 들이기 위해 스스로를 훈련하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_17",
+    "dimension": "C",
+    "text": "누군가를 비판하거나 충고할 때 상대방이 상처받지 않도록 말을 각별히 조심한다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_17",
+    "dimension": "ST",
+    "text": "기적이나 초자연적인 현상이 실제로 존재할 수 있으며, 인간의 이해를 넘어서는 영역이 있다고 본다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_18",
+    "dimension": "NS",
+    "text": "재미있다고 느끼는 일에는 몰입 속도가 빠른 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_18",
+    "dimension": "HA",
+    "text": "중요한 선택 전 걱정이 많아지는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_18",
+    "dimension": "RD",
+    "text": "사소한 서운함도 마음속에 쌓아두었다가 나중에 곱씹곤 한다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_18",
+    "dimension": "P",
+    "text": "실패를 겪어도 그것을 극복해야 한다는 압박감에 다시 일어난다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_18",
+    "dimension": "SD",
+    "text": "내면의 목소리에 귀 기울이며 나의 진정한 욕구가 무엇인지 자주 질문한다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_18",
+    "dimension": "C",
+    "text": "나의 성공이 오로지 내 노력만으로 이루어진 것이 아니라 타인의 도움 덕분이라 여긴다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_18",
+    "dimension": "ST",
+    "text": "내 삶의 고통조차도 우주의 섭리나 인과율 속에서 의미가 있는 것이라 받아들이며 견뎌낸다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_19",
+    "dimension": "NS",
+    "text": "즉흥적인 제안에도 생각보다 잘 움직이는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_19",
+    "dimension": "HA",
+    "text": "상대 기분이 달라진 것 같으면 계속 신경 쓰인다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_19",
+    "dimension": "RD",
+    "text": "나를 진심으로 이해해주는 단 한 사람만 있어도 세상을 다 얻은 것 같다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_19",
+    "dimension": "P",
+    "text": "과거의 기억이나 감정을 오래도록 마음속에 간직하고 곱씹는다",
+    "reverse": false
+  },
+  {
+    "id": "sd_f_19",
+    "dimension": "SD",
+    "text": "남들이 다 가는 길이 아니더라도 내가 옳다고 믿으면 흔들림 없이 간다",
+    "reverse": false
+  },
+  {
+    "id": "c_f_19",
+    "dimension": "C",
+    "text": "진심 어린 위로와 공감이 사람의 마음을 치유하는 가장 큰 힘이라고 믿는다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_19",
+    "dimension": "ST",
+    "text": "기도나 명상을 통해 나보다 더 크고 절대적인 존재와의 교감이나 에너지를 경험한 적이 있다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_20",
+    "dimension": "NS",
+    "text": "감정 흐름이 살아 있는 사람에게 더 끌리는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_20",
+    "dimension": "HA",
+    "text": "가까운 사람이 멀어진 느낌이 들면 쉽게 불안해지는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_20",
+    "dimension": "RD",
+    "text": "상대방이 나를 어떻게 생각하는지 지속적으로 확인받고 싶어한다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_20",
+    "dimension": "P",
+    "text": "누군가와 갈등이 생기면 내 주장을 굽히기보다 끝까지 관철시키려 한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_r_0",
+    "dimension": "SD",
+    "text": "일이 뜻대로 풀리지 않을 때 종종 주변 환경이나 다른 사람을 탓하게 된다",
+    "reverse": true
+  },
+  {
+    "id": "c_f_20",
+    "dimension": "C",
+    "text": "자신의 이익만 챙기고 남을 배려하지 않는 사람을 보면 매우 큰 거부감을 느낀다",
+    "reverse": false
+  },
+  {
+    "id": "st_f_20",
+    "dimension": "ST",
+    "text": "사회적 관습이나 틀에 얽매이지 않고 존재 자체의 자유로움과 해방감을 강하게 열망한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_21",
+    "dimension": "NS",
+    "text": "너무 예측 가능한 관계는 쉽게 답답하게 느껴질 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_21",
+    "dimension": "HA",
+    "text": "관계 흐름이 달라지면 이유를 계속 생각하게 된다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_21",
+    "dimension": "RD",
+    "text": "사람들 사이에서 겉돌거나 소외되는 느낌을 극도로 싫어한다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_21",
+    "dimension": "P",
+    "text": "결과가 당장 나오지 않더라도 묵묵히 나의 길을 걸어갈 수 있다",
+    "reverse": false
+  },
+  {
+    "id": "sd_r_1",
+    "dimension": "SD",
+    "text": "감정이 격해지면 내 행동이나 말을 스스로 통제하지 못할 때가 많다",
+    "reverse": true
+  },
+  {
+    "id": "c_r_0",
+    "dimension": "C",
+    "text": "내 이익을 희생하면서까지 다른 사람이나 공동체를 돕고 싶은 마음은 별로 없다",
+    "reverse": true
+  },
+  {
+    "id": "st_r_0",
+    "dimension": "ST",
+    "text": "증명되지 않은 신비로운 이야기나 영적인 개념에는 전혀 관심이 없으며 믿지도 않는다",
+    "reverse": true
+  },
+  {
+    "id": "ns_f_22",
+    "dimension": "NS",
+    "text": "감정 표현이 풍부한 사람에게 흥미를 느끼는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_22",
+    "dimension": "HA",
+    "text": "상대 말투 변화에 민감하게 반응하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_22",
+    "dimension": "RD",
+    "text": "기분이 안 좋을 때 누군가 알아채 주고 물어봐 주기를 바란다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_22",
+    "dimension": "P",
+    "text": "완벽주의적인 성향 때문에 일이 마음에 들 때까지 반복해서 고친다",
+    "reverse": false
+  },
+  {
+    "id": "sd_r_2",
+    "dimension": "SD",
+    "text": "인생의 중요한 결정을 내릴 때 내 생각보다 다른 사람의 의견에 크게 의존한다",
+    "reverse": true
+  },
+  {
+    "id": "c_r_1",
+    "dimension": "C",
+    "text": "다른 사람의 슬픔이나 고통에 깊이 공감하기보다는 객관적으로 바라보는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "st_r_1",
+    "dimension": "ST",
+    "text": "현실적인 문제 해결과 눈에 보이는 이익이 정신적인 깨달음이나 내면의 평화보다 중요하다",
+    "reverse": true
+  },
+  {
+    "id": "ns_f_23",
+    "dimension": "NS",
+    "text": "관계 안에 긴장감이 전혀 없으면 무기력함을 느낄 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_23",
+    "dimension": "HA",
+    "text": "애매한 거리감이 생기면 긴장감이 커지는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_23",
+    "dimension": "RD",
+    "text": "인간관계에서 내가 더 많이 신경 쓰고 노력한다고 느낄 때가 많다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_23",
+    "dimension": "P",
+    "text": "감정의 기복이 있더라도 겉으로 드러나는 나의 태도는 일정하게 유지한다",
+    "reverse": false
+  },
+  {
+    "id": "sd_r_3",
+    "dimension": "SD",
+    "text": "나의 부족한 점을 마주하는 것이 두려워 회피하거나 합리화하곤 한다",
+    "reverse": true
+  },
+  {
+    "id": "c_r_2",
+    "dimension": "C",
+    "text": "세상은 치열한 경쟁 사회이며 남을 이겨야만 살아남을 수 있다고 생각한다",
+    "reverse": true
+  },
+  {
+    "id": "st_r_2",
+    "dimension": "ST",
+    "text": "우연한 일은 그저 우연일 뿐이며, 거기에 특별한 운명이나 우주적 메시지가 있다고 생각하지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "ns_f_24",
+    "dimension": "NS",
+    "text": "처음엔 관심이 커도 감정 흐름이 정체되면 급격히 식을 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_24",
+    "dimension": "HA",
+    "text": "관계가 흔들리는 느낌을 오래 끌고 가는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_24",
+    "dimension": "RD",
+    "text": "의견 충돌이 생기면 논리보다 감정적인 서운함이 먼저 앞선다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_24",
+    "dimension": "P",
+    "text": "어려운 과제가 주어지면 오히려 정복하고 싶은 오기가 생긴다",
+    "reverse": false
+  },
+  {
+    "id": "sd_r_4",
+    "dimension": "SD",
+    "text": "사회적인 성공이나 타인의 인정이 내 삶의 가장 중요한 기준이다",
+    "reverse": true
+  },
+  {
+    "id": "c_r_3",
+    "dimension": "C",
+    "text": "다른 사람에게 피해를 주었더라도 상황이 어쩔 수 없었다면 크게 자책하지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "st_r_3",
+    "dimension": "ST",
+    "text": "자연이나 예술에 깊이 몰입하여 나와 세상을 잊어버리는 무아지경을 경험해 본 적이 거의 없다",
+    "reverse": true
+  },
+  {
+    "id": "ns_f_25",
+    "dimension": "NS",
+    "text": "감정 온도가 살아 있는 관계를 더 오래 기억하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_25",
+    "dimension": "HA",
+    "text": "갑자기 연락 빈도가 줄어들면 여러 생각이 드는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_25",
+    "dimension": "RD",
+    "text": "관계를 유지하기 위해 나의 감정을 억누르며 참을 때가 종종 있다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_25",
+    "dimension": "P",
+    "text": "특정 사람에 대한 마음이나 애착을 남들보다 훨씬 길게 유지하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "sd_r_5",
+    "dimension": "SD",
+    "text": "과거의 상처나 실패 경험에 발목을 잡혀 새로운 시작을 망설일 때가 많다",
+    "reverse": true
+  },
+  {
+    "id": "c_r_4",
+    "dimension": "C",
+    "text": "능력 없고 뒤처지는 사람들은 그들 스스로 노력하지 않았기 때문이라고 생각한다",
+    "reverse": true
+  },
+  {
+    "id": "st_r_4",
+    "dimension": "ST",
+    "text": "죽음은 그저 생명 활동의 정지일 뿐이며, 사후 세계나 영혼의 영원성 같은 것은 없다고 믿는다",
+    "reverse": true
+  },
+  {
+    "id": "ns_f_26",
+    "dimension": "NS",
+    "text": "관계 초반의 설렘을 중요하게 느끼는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_26",
+    "dimension": "HA",
+    "text": "별일 아닌 상황도 혼자 오래 정리하게 될 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_26",
+    "dimension": "RD",
+    "text": "새로운 사람을 만날 때 나를 좋아하도록 노력하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_26",
+    "dimension": "P",
+    "text": "한 가지 문제에 꽂히면 다른 일은 미뤄두고 그것에만 몰두한다",
+    "reverse": false
+  },
+  {
+    "id": "c_r_5",
+    "dimension": "C",
+    "text": "갈등 상황에서 굳이 양보하기보다는 철저히 시시비비를 가려 내 권리를 찾는다",
+    "reverse": true
+  },
+  {
+    "id": "st_r_5",
+    "dimension": "ST",
+    "text": "명상, 기도, 직관 같은 것보다는 철저히 이성, 논리, 과학적 사실만을 신뢰하고 따르는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ns_f_27",
+    "dimension": "NS",
+    "text": "새로운 사람을 알아가는 과정 자체를 좋아하는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_27",
+    "dimension": "HA",
+    "text": "감정이 정리되지 않으면 혼자 생각이 길어지는 편이다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_27",
+    "dimension": "RD",
+    "text": "다른 사람의 긍정적인 피드백 없이는 성취감을 온전히 느끼기 어렵다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_27",
+    "dimension": "P",
+    "text": "목표를 위해서라면 내 개인적인 시간과 휴식을 기꺼이 희생할 수 있다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_28",
+    "dimension": "NS",
+    "text": "감정 흐름 변화가 큰 관계에 오래 신경 쓰일 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_28",
+    "dimension": "HA",
+    "text": "문제가 생기면 최악의 상황까지 상상할 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_28",
+    "dimension": "RD",
+    "text": "나에 대한 타인의 뒷말이나 평가에 대해 매우 예민하게 반응한다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_28",
+    "dimension": "P",
+    "text": "관계의 끝이 보임에도 불구하고 미련을 버리지 못하고 질척일 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ns_f_29",
+    "dimension": "NS",
+    "text": "평온하기만 한 관계에서는 감정 에너지가 떨어질 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "ha_f_29",
+    "dimension": "HA",
+    "text": "이미 지나간 일도 계속 떠올릴 때가 있다",
+    "reverse": false
+  },
+  {
+    "id": "rd_f_29",
+    "dimension": "RD",
+    "text": "가장 신뢰하는 사람과 잠시라도 소통이 끊기면 마음이 불안해진다",
+    "reverse": false
+  },
+  {
+    "id": "p_f_29",
+    "dimension": "P",
+    "text": "정해진 원칙이나 규칙은 상황이 변해도 끝까지 지수하려 한다",
+    "reverse": false
+  },
+  {
+    "id": "ns_r_0",
+    "dimension": "NS",
+    "text": "예상하지 못한 변화는 가능한 피하고 싶은 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_0",
+    "dimension": "HA",
+    "text": "웬만한 상황에서는 크게 걱정하지 않는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_0",
+    "dimension": "RD",
+    "text": "다른 사람들이 나를 어떻게 평가하든 내 감정에는 큰 영향이 없다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_0",
+    "dimension": "P",
+    "text": "노력 대비 성과가 보이지 않으면 미련 없이 바로 포기하는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_1",
+    "dimension": "NS",
+    "text": "새로운 환경에서는 쉽게 긴장되는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_1",
+    "dimension": "HA",
+    "text": "문제가 생겨도 금방 털어내는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_1",
+    "dimension": "RD",
+    "text": "타인의 칭찬과 인정에 크게 의존하지 않고 스스로 만족하는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_1",
+    "dimension": "P",
+    "text": "감정적으로 너무 피곤해지면 일이나 관계를 쉽게 놓아버린다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_2",
+    "dimension": "NS",
+    "text": "익숙한 루틴이 유지될 때 가장 안정감을 느낀다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_2",
+    "dimension": "HA",
+    "text": "실수 가능성이 있어도 크게 긴장하지 않는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_2",
+    "dimension": "RD",
+    "text": "사람들이 나에게 차갑게 대하더라도 쿨하게 넘길 수 있다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_2",
+    "dimension": "P",
+    "text": "지루하거나 반복적인 일은 금방 흥미를 잃고 다른 것을 찾는다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_3",
+    "dimension": "NS",
+    "text": "계획에 없던 상황은 스트레스로 느껴지는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_3",
+    "dimension": "HA",
+    "text": "관계 변화에도 비교적 담담한 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_3",
+    "dimension": "RD",
+    "text": "인간관계가 다소 소원해지더라도 별로 외로움을 타지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_3",
+    "dimension": "P",
+    "text": "나를 힘들게 하는 사람과의 관계는 단호하게 끊어낼 수 있다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_4",
+    "dimension": "NS",
+    "text": "즉흥적으로 움직이는 사람을 이해하기 어려운 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_4",
+    "dimension": "HA",
+    "text": "예상과 다르게 흘러가도 크게 흔들리지 않는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_4",
+    "dimension": "RD",
+    "text": "타인과의 감정 교류보다는 혼자만의 시간을 가질 때 더 충전된다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_4",
+    "dimension": "P",
+    "text": "어려운 장벽에 부딪히면 굳이 무리해서 넘으려 하지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_5",
+    "dimension": "NS",
+    "text": "변화보다는 안정적인 흐름을 더 선호하는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_5",
+    "dimension": "HA",
+    "text": "불안한 상황에서도 마음이 쉽게 무너지지 않는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_5",
+    "dimension": "RD",
+    "text": "카톡 답장이 늦거나 무미건조해도 특별한 의미를 두지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_5",
+    "dimension": "P",
+    "text": "목표 달성보다는 현재 내 마음의 편안함이 훨씬 더 중요하다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_6",
+    "dimension": "NS",
+    "text": "새로운 시도를 하기 전 오래 고민하는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_6",
+    "dimension": "HA",
+    "text": "갈등 상황도 비교적 빨리 잊는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_6",
+    "dimension": "RD",
+    "text": "관계의 거리가 멀어지는 것에 대해 자연스러운 현상이라고 생각한다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_6",
+    "dimension": "P",
+    "text": "한 가지 일에 지나치게 매달리기보다 융통성 있게 노선을 변경한다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_7",
+    "dimension": "NS",
+    "text": "감정보다 안정적인 흐름이 훨씬 중요하다고 느낀다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_7",
+    "dimension": "HA",
+    "text": "사람 반응을 크게 신경 쓰지 않는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_7",
+    "dimension": "RD",
+    "text": "누군가에게 굳이 사랑받거나 인정받으려고 애쓰지 않는 편이다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_7",
+    "dimension": "P",
+    "text": "과거의 실수나 실패에 대해 깊게 반성하기보다 훌훌 털어버린다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_8",
+    "dimension": "NS",
+    "text": "예상 가능한 결과가 보장되지 않으면 시작하기 꺼려진다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_8",
+    "dimension": "HA",
+    "text": "과거의 실패나 상처를 오랫동안 마음에 담아두지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_8",
+    "dimension": "RD",
+    "text": "사람들 사이의 감정적인 기류 변화에 크게 신경 쓰지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_8",
+    "dimension": "P",
+    "text": "내 기준에 완벽하지 않아도 적당한 선에서 타협하고 넘어갈 줄 안다",
+    "reverse": true
+  },
+  {
+    "id": "ns_r_9",
+    "dimension": "NS",
+    "text": "정해진 계획이 틀어지면 심한 스트레스를 받는다",
+    "reverse": true
+  },
+  {
+    "id": "ha_r_9",
+    "dimension": "HA",
+    "text": "아직 일어나지 않은 일에 대해서는 굳이 미리 걱정하지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "rd_r_9",
+    "dimension": "RD",
+    "text": "내가 베푼 호의에 대해 상대의 감사나 보답을 크게 기대하지 않는다",
+    "reverse": true
+  },
+  {
+    "id": "p_r_9",
+    "dimension": "P",
+    "text": "쉬어야 할 때는 일에 대한 압박감을 내려놓고 온전히 쉴 수 있다",
+    "reverse": true
+  }
 ];
