@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { questions } from "@/data/questions";
@@ -12,7 +12,7 @@ const CHOICES = [
   { value: 4, label: "매우 그렇다" },
 ];
 
-export default function TestPage() {
+function TestContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const name = searchParams.get("n") || "사용자";
@@ -97,5 +97,13 @@ export default function TestPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TestPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fdfbf7]" />}>
+      <TestContent />
+    </Suspense>
   );
 }

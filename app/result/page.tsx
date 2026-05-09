@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { questions } from "@/data/questions";
@@ -45,7 +45,7 @@ const calculateScores = (answers: number[]) => {
   return processed;
 };
 
-export default function ResultPage() {
+function ResultContent() {
   const searchParams = useSearchParams();
   const name = searchParams.get("n") || "사용자";
   const gender = searchParams.get("g") || "비공개";
@@ -304,6 +304,14 @@ export default function ResultPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fdfbf7]" />}>
+      <ResultContent />
+    </Suspense>
   );
 }
 
