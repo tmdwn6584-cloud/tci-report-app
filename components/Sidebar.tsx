@@ -33,28 +33,28 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-64 bg-white/80 backdrop-blur-md border-r border-gray-100 flex flex-col justify-between h-screen fixed left-0 top-0 z-50">
-      <div>
-        <div className="h-20 flex items-center px-8 border-b border-gray-50 mb-6">
+    <aside className="w-full md:w-64 bg-white/90 backdrop-blur-md border-t md:border-t-0 md:border-r border-gray-100 flex md:flex-col justify-between h-16 md:h-screen fixed bottom-0 md:bottom-auto md:left-0 md:top-0 z-50">
+      <div className="flex md:flex-col w-full md:w-auto h-full md:h-auto">
+        <div className="hidden md:flex h-20 items-center px-8 border-b border-gray-50 mb-6">
           <div className="flex items-center gap-2 text-xl font-bold text-gray-800">
             <span className="text-purple-600 text-2xl">✤</span> TCI LAB
           </div>
         </div>
         
-        <nav className="flex flex-col gap-2 px-4">
+        <nav className="flex flex-row md:flex-col w-full md:w-auto justify-around md:justify-start gap-1 md:gap-2 px-2 md:px-4 items-center md:items-stretch h-full md:h-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || (item.href === "/result" && pathname.startsWith("/result"));
             
             return (
-              <Link key={item.href} href={item.href}>
-                <div className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${
+              <Link key={item.href} href={item.href} className="flex-1 md:flex-none flex justify-center md:justify-start">
+                <div className={`flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 px-2 md:px-4 py-2 md:py-3 rounded-xl transition-all ${
                   isActive 
-                    ? "bg-purple-50 text-purple-700 font-medium" 
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                    ? "text-purple-700 font-medium md:bg-purple-50" 
+                    : "text-gray-400 hover:bg-gray-50 hover:text-gray-900"
                 }`}>
-                  <Icon className="w-5 h-5" />
-                  <span>{item.label}</span>
+                  <Icon className="w-5 h-5 md:w-5 md:h-5" />
+                  <span className="text-[10px] md:text-base">{item.label}</span>
                 </div>
               </Link>
             );
@@ -62,7 +62,7 @@ export function Sidebar() {
         </nav>
       </div>
 
-      <div className="p-4 mb-4">
+      <div className="hidden md:block p-4 mb-4">
         <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 text-center border border-purple-100/50 shadow-sm">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
             <Crown className="w-5 h-5 text-purple-500" />

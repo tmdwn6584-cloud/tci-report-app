@@ -5,27 +5,27 @@ import { Sparkles, Heart, Shield, RefreshCw } from "lucide-react";
 
 export default function GuidePage() {
   return (
-    <div className="min-h-screen bg-[#fdfbf7] p-6 md:p-12 relative overflow-hidden flex items-center justify-center">
+    <div className="min-h-screen bg-[#fdfbf7] p-4 md:p-12 relative overflow-hidden flex items-center justify-center w-full max-w-[100vw] overflow-x-hidden">
       {/* Background blurs */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-purple-200/40 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-100/50 blur-[100px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[80%] h-[60%] rounded-full bg-purple-200/40 blur-[80px] md:blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[50%] rounded-full bg-blue-100/50 blur-[80px] md:blur-[100px] pointer-events-none" />
 
-      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10">
+      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 relative z-10 pt-10 md:pt-0">
         
         {/* Left Side: Dreamy Illustration Area */}
-        <div className="md:col-span-5 flex flex-col justify-center">
+        <div className="md:col-span-5 flex flex-col justify-center w-full">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="sticky top-24"
+            className="md:sticky md:top-24 text-center md:text-left"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-lavender-200 rounded-2xl flex items-center justify-center mb-8 shadow-sm">
-              <Sparkles className="w-8 h-8 text-purple-500" />
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-100 to-lavender-200 rounded-2xl flex items-center justify-center mb-6 md:mb-8 shadow-sm mx-auto md:mx-0">
+              <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-purple-500" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-light text-gray-800 leading-tight mb-6 tracking-tight">
+            <h1 className="text-2xl md:text-5xl font-light text-gray-800 leading-snug md:leading-tight mb-4 md:mb-6 tracking-tight break-keep">
               이 검사는<br />
-              <span className="font-semibold text-purple-700">당신의 감정 흐름</span>을<br />
+              <span className="font-semibold text-purple-700">당신의 감정 흐름</span>을<br className="hidden md:block" />
               읽기 위한 여정입니다.
             </h1>
             <p className="text-lg text-gray-500 font-light leading-relaxed mb-8">
@@ -43,34 +43,31 @@ export default function GuidePage() {
         </div>
 
         {/* Right Side: Guide Cards */}
-        <div className="md:col-span-7 flex flex-col gap-6">
+        <div className="md:col-span-7 flex flex-col gap-4 md:gap-6 w-full">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white/80 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white"
+            className="bg-white/90 backdrop-blur-md p-6 md:p-10 rounded-[1.5rem] md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white"
           >
-            <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 bg-purple-50 rounded-full"><Heart className="w-5 h-5 text-purple-600" /></div>
-              <h2 className="text-xl font-bold text-gray-800">1. 무엇을 보는 검사인가요?</h2>
+            <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+              <div className="p-2.5 md:p-3 bg-purple-50 rounded-full"><Heart className="w-4 h-4 md:w-5 md:h-5 text-purple-600" /></div>
+              <h2 className="text-lg md:text-xl font-bold text-gray-800">1. 무엇을 보는 검사인가요?</h2>
             </div>
-            <p className="text-gray-600 leading-relaxed font-light">
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light break-keep">
               이 검사는 단순 성격 유형 검사가 아닙니다.<br/><br/>
-              왜 특정 관계를 오래 못 놓는지,<br/>
-              왜 감정이 오래 남는지,<br/>
-              왜 말투 변화에 민감한지,<br/>
-              왜 혼자 오래 복기하는지 같은 <strong className="text-purple-700 font-medium">"감정 흐름"</strong>을 읽습니다.<br/><br/>
+              왜 특정 관계를 오래 못 놓는지, 왜 감정이 오래 남는지, 왜 말투 변화에 민감한지, 왜 혼자 오래 복기하는지 같은 <strong className="text-purple-700 font-medium">"감정 흐름"</strong>을 읽습니다.<br/><br/>
               당신의 성격을 단순 분류하기보다, 사람과 관계 안에서 어떤 방식으로 반응하고 흔들리는지를 섬세하게 분석합니다.
             </p>
           </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-            className="bg-white/80 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white"
+            className="bg-white/90 backdrop-blur-md p-6 md:p-10 rounded-[1.5rem] md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white"
           >
-            <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 bg-blue-50 rounded-full"><RefreshCw className="w-5 h-5 text-blue-600" /></div>
-              <h2 className="text-xl font-bold text-gray-800">2. 가장 자연스럽게 답변해주세요</h2>
+            <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+              <div className="p-2.5 md:p-3 bg-blue-50 rounded-full"><RefreshCw className="w-4 h-4 md:w-5 md:h-5 text-blue-600" /></div>
+              <h2 className="text-lg md:text-xl font-bold text-gray-800">2. 가장 자연스럽게 답변해주세요</h2>
             </div>
-            <p className="text-gray-600 leading-relaxed font-light">
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light break-keep">
               이 검사에는 정답이 없습니다. "좋아 보이는 답"을 고르기보다는 아래의 기준을 떠올려주세요.<br/><br/>
               • 실제 관계에서의 반응<br/>
               • 감정이 올라오는 순간의 내 모습<br/>

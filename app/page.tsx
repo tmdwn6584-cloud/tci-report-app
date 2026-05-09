@@ -35,35 +35,35 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-[#fdfbf7]">
+    <div className="min-h-screen flex items-center justify-center p-4 md:p-6 relative overflow-hidden bg-[#fdfbf7] w-full max-w-[100vw] overflow-x-hidden">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] rounded-full bg-purple-200/30 blur-[120px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] rounded-full bg-blue-100/30 blur-[120px]" />
-        <div className="absolute top-[20%] right-[20%] w-[40%] h-[40%] rounded-full bg-pink-100/20 blur-[100px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[80%] h-[70%] rounded-full bg-purple-200/30 blur-[100px] md:blur-[120px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[90%] h-[80%] rounded-full bg-blue-100/30 blur-[100px] md:blur-[120px]" />
+        <div className="absolute top-[20%] right-[10%] md:right-[20%] w-[50%] h-[40%] rounded-full bg-pink-100/20 blur-[80px] md:blur-[100px]" />
       </div>
 
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-        className="max-w-xl w-full z-10"
+        className="w-full max-w-xl z-10 mx-auto"
       >
-        <div className="bg-white/60 backdrop-blur-xl border border-white p-10 md:p-14 rounded-[2.5rem] shadow-[0_8px_40px_rgb(0,0,0,0.03)] text-center">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-purple-50 text-purple-600 text-xs font-semibold tracking-wider mb-8">
+        <div className="bg-white/60 backdrop-blur-xl border border-white p-6 md:p-14 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_8px_40px_rgb(0,0,0,0.03)] text-center w-full">
+          <div className="inline-block px-3 py-1.5 md:px-4 rounded-full bg-purple-50 text-purple-600 text-[10px] md:text-xs font-semibold tracking-wider mb-6 md:mb-8">
             PREMIUM EMOTIONAL INSIGHT
           </div>
           
-          <h1 className="text-3xl md:text-4xl font-light text-gray-800 mb-6 leading-tight tracking-tight">
+          <h1 className="text-2xl md:text-4xl font-light text-gray-800 mb-4 md:mb-6 leading-snug md:leading-tight tracking-tight break-keep">
             당신의 성격이 아니라,<br />
             당신의 <span className="font-semibold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">감정 흐름</span>을 읽습니다.
           </h1>
           
-          <p className="text-gray-500 mb-10 text-lg font-light leading-relaxed">
+          <p className="text-gray-500 mb-8 md:mb-10 text-sm md:text-lg font-light leading-relaxed break-keep">
             왜 특정 관계를 오래 못 놓는지,<br className="hidden md:block" />
             당신의 심리 구조 안에서 다정하게 설명해 드립니다.
           </p>
 
-          <div className="flex flex-col gap-5 mb-10 text-left">
+          <div className="flex flex-col gap-4 md:gap-5 mb-8 md:mb-10 text-left w-full">
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-2 ml-1 tracking-wide uppercase">Name</label>
               <input 

@@ -70,10 +70,10 @@ function TestContent() {
   const isCurrentPageComplete = currentQuestions.every((_, idx) => answers[startIdx + idx] !== 0);
 
   return (
-    <div className="min-h-screen flex flex-col p-6 items-center bg-[#fdfbf7]">
-      <div className="w-full max-w-2xl z-10 flex flex-col pt-10 pb-24">
+    <div className="min-h-screen flex flex-col p-4 md:p-6 items-center bg-[#fdfbf7] w-full max-w-full overflow-x-hidden">
+      <div className="w-full max-w-2xl z-10 flex flex-col pt-4 md:pt-10 pb-24 md:pb-24">
         
-        <div className="mb-10 sticky top-0 bg-[#fdfbf7]/90 backdrop-blur-md pt-4 pb-6 z-20">
+        <div className="mb-6 md:mb-10 sticky top-0 bg-[#fdfbf7]/95 backdrop-blur-md pt-2 pb-4 md:pt-4 md:pb-6 z-20">
           <div className="flex justify-between items-end mb-3">
             <span className="text-purple-600 font-semibold text-sm tracking-wide">
               {name}님의 감정 흐름 분석 중
@@ -105,23 +105,23 @@ function TestContent() {
                 const isAnswered = answers[globalIdx] !== 0;
                 
                 return (
-                  <div key={q.id} className={`p-6 md:p-8 rounded-[2rem] border transition-all duration-300 ${isAnswered ? 'bg-white/90 border-purple-100 shadow-[0_8px_30px_rgb(147,51,234,0.05)]' : 'bg-white/50 border-gray-100 shadow-sm'}`}>
-                    <h2 className="text-lg md:text-xl font-light text-gray-800 leading-relaxed mb-6 break-keep">
-                      <span className="text-purple-400 font-medium mr-2">{globalIdx + 1}.</span>
+                  <div key={q.id} className={`p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border transition-all duration-300 w-full ${isAnswered ? 'bg-white/95 border-purple-200 shadow-[0_8px_30px_rgb(147,51,234,0.06)]' : 'bg-white/70 border-gray-100 shadow-sm'}`}>
+                    <h2 className="text-base md:text-xl font-medium text-gray-800 leading-relaxed mb-6 break-keep">
+                      <span className="text-purple-400 font-bold mr-2 text-sm md:text-lg">{globalIdx + 1}.</span>
                       {q.text}
                     </h2>
                     
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:gap-3">
                       {CHOICES.map((choice) => {
                         const isSelected = answers[globalIdx] === choice.value;
                         return (
                           <button
                             key={choice.value}
                             onClick={() => handleSelect(idx, choice.value)}
-                            className={`flex-1 py-3 md:py-4 px-2 rounded-2xl text-xs md:text-sm transition-all border font-medium ${
+                            className={`flex-1 py-4 px-2 rounded-2xl text-xs md:text-sm transition-all border font-medium whitespace-pre-wrap break-keep leading-snug ${
                               isSelected 
-                                ? 'bg-purple-50 border-purple-400 text-purple-700 shadow-sm' 
-                                : 'bg-white border-gray-100 text-gray-500 hover:bg-gray-50 hover:border-gray-200'
+                                ? 'bg-purple-50 border-purple-400 text-purple-700 shadow-sm ring-1 ring-purple-400' 
+                                : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-purple-200'
                             }`}
                           >
                             {choice.label}
