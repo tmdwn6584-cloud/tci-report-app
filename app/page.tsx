@@ -119,9 +119,14 @@ export default function Home() {
           </motion.button>
           
           <div className="mt-6 text-xs text-gray-400 font-light flex justify-center gap-4 tracking-wider">
-            <span>총 49문항</span>
+            <span>총 180문항</span>
             <span className="opacity-50">|</span>
-            <span>약 10분 소요</span>
+            <span>약 15분 소요</span>
+          </div>
+          
+          <div className="mt-10 text-[10px] md:text-xs text-gray-400/80 font-light leading-relaxed break-keep px-4">
+            <p>본 검사는 TCI의 7개 기질 구조를 참고하여 재해석된 유사 심층 성향검사입니다.</p>
+            <p className="mt-1">의학적 진단 목적이 아닌 자기이해 기반 감정 흐름 분석 리포트입니다.</p>
           </div>
         </div>
       </motion.div>

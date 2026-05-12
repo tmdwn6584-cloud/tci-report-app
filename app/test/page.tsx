@@ -14,6 +14,8 @@ const CHOICES = [
 ];
 
 const PAGE_SIZE = 5;
+const MAX_QUESTIONS = 180;
+const testQuestions = questions.slice(0, MAX_QUESTIONS);
 
 function TestContent() {
   const router = useRouter();
@@ -23,11 +25,11 @@ function TestContent() {
   const age = searchParams.get("age") || "";
   
   const [currentPage, setCurrentPage] = useState(0);
-  const [answers, setAnswers] = useState<number[]>(new Array(questions.length).fill(0));
+  const [answers, setAnswers] = useState<number[]>(new Array(testQuestions.length).fill(0));
 
-  const totalPages = Math.ceil(questions.length / PAGE_SIZE);
+  const totalPages = Math.ceil(testQuestions.length / PAGE_SIZE);
   const startIdx = currentPage * PAGE_SIZE;
-  const currentQuestions = questions.slice(startIdx, startIdx + PAGE_SIZE);
+  const currentQuestions = testQuestions.slice(startIdx, startIdx + PAGE_SIZE);
   const progress = ((currentPage + 1) / totalPages) * 100;
 
   const handleSelect = (questionIndex: number, value: number) => {

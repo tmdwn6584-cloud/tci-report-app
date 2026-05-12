@@ -195,79 +195,103 @@ function ResultContent() {
         </div>
 
         {/* Free Section: Short Conclusion */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="bg-gradient-to-br from-purple-50 to-white p-6 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-purple-100/50 mb-8 md:mb-12 text-center w-full">
-          <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-purple-400 mx-auto mb-3 md:mb-4" />
-          <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 md:mb-4 break-keep">핵심 관계 패턴 분석</h3>
-          <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light mb-2 break-keep">
-            겉으로는 안정적으로 상황을 이끌어가려 하지만, 속으로는 상대방의 말이나 태도가 의미하는 바를 오래 곱씹는 경향이 있습니다.
-          </p>
-          <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light break-keep">
-            갈등이 생겼을 때 바로 화를 내기보다 마음의 문을 먼저 닫아버림으로써 자신을 보호하려 합니다.
-          </p>
-        </motion.div>
+        <div className="flex flex-col gap-6 w-full mb-12">
+          <div className="text-center mb-6">
+            <span className="text-purple-600 font-semibold tracking-widest text-xs md:text-sm mb-2 block">FREE ANALYSIS</span>
+            <h2 className="text-xl md:text-2xl font-light text-gray-800 break-keep leading-snug">
+              {name}님의 핵심 감정 패턴
+            </h2>
+          </div>
 
-        {/* Full Report Section */}
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="w-1.5 h-5 bg-purple-400 rounded-full"></span>
+              인간관계 패턴
+            </h3>
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light break-keep">
+              당신은 관계 자체보다, 관계의 감정 흐름 변화에 더 크게 반응하는 경향이 있습니다.
+              가까워질수록 상대 반응과 거리감 변화를 더 세밀하게 읽게 될 가능성이 있습니다.
+            </p>
+          </div>
+
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="w-1.5 h-5 bg-blue-400 rounded-full"></span>
+              감정 흐름
+            </h3>
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light break-keep">
+              감정이 완전히 정리되지 않은 관계는, 이미 끝났더라도 머릿속에서 반복 복기될 가능성이 있습니다.
+              특히 애매했던 관계일수록 감정이 오래 남는 흐름이 나타날 수 있습니다.
+            </p>
+          </div>
+
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="w-1.5 h-5 bg-green-400 rounded-full"></span>
+              자기방어 방식
+            </h3>
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light break-keep">
+              겉으로는 비교적 차분해 보여도, 실제 내면에서는 감정을 오래 정리하고 있을 가능성이 있습니다.
+              감정을 바로 터뜨리기보다 내부에서 오래 해석하는 흐름이 존재할 수 있습니다.
+            </p>
+          </div>
+
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="w-1.5 h-5 bg-pink-400 rounded-full"></span>
+              감정 피로 구조
+            </h3>
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed font-light break-keep">
+              감정 피로가 누적될 경우, 갑자기 관계 에너지를 줄이고 혼자만의 시간이 길어질 가능성이 있습니다.
+              겉으로는 괜찮아 보여도 내부 피로는 이미 오래 쌓여 있을 수 있습니다.
+            </p>
+          </div>
+        </div>
+
+        {/* Premium Locked Section */}
         <div className="relative w-full">
-          <div className="bg-white p-6 md:p-14 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-50 text-gray-800 prose prose-purple max-w-none prose-p:font-light prose-p:leading-loose w-full break-words">
+          <div className="bg-gradient-to-b from-gray-900 to-gray-800 p-8 md:p-14 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl text-white max-w-none w-full relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px]"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px]"></div>
             
-            <div className="text-center mb-10 md:mb-16">
-              <span className="text-purple-600 font-semibold tracking-widest text-xs md:text-sm mb-3 md:mb-4 block">DEEP ANALYSIS</span>
-              <h2 className="text-xl md:text-3xl font-light text-gray-800 break-keep leading-snug">
-                왜 이런 감정 흐름이 반복되는 걸까요?
+            <div className="relative z-10 text-center mb-10">
+              <div className="inline-block p-3 bg-white/10 rounded-2xl mb-4 backdrop-blur-md">
+                <Lock className="w-6 h-6 text-purple-300" />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-light mb-4 break-keep">
+                내 감정의 깊은 곳을 읽는<br />
+                <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-300">프리미엄 심층 리포트</span>
               </h2>
-            </div>
-
-            <h3 className="text-lg md:text-xl font-bold text-gray-800 mt-8 md:mt-10 mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-keep">
-              <span className="min-w-7 w-7 h-7 md:w-8 md:h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xs md:text-sm">1</span>
-              숨겨진 감정 피로 구조
-            </h3>
-            <p className="text-sm md:text-base break-keep">
-              {name}님은 기본적으로 다른 사람들의 감정선에 잘 맞춰주는 편입니다. 하지만 이것이 본인이 편해서라기보다, 
-              "관계가 어색해지거나 갈등이 생기는 상황 자체를 피로하게 느끼기 때문"일 가능성이 큽니다. 
-              따라서 남들이 보기에는 성격이 좋아 보일 수 있지만, 정작 혼자 있을 때는 사람을 만나는 것 자체가 
-              막대한 에너지 소모로 다가오곤 합니다.
-            </p>
-
-            <h3 className="text-lg md:text-xl font-bold text-gray-800 mt-10 md:mt-12 mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-keep">
-              <span className="min-w-7 w-7 h-7 md:w-8 md:h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs md:text-sm">2</span>
-              관계 거리감 민감도
-            </h3>
-            <p className="text-sm md:text-base break-keep">
-              매우 특징적인 부분은, 타인과의 '심리적 거리감'이 조금이라도 달라지는 것을 귀신같이 캐치한다는 점입니다. 
-              어제까지 다정했던 사람이 오늘 미묘하게 온도가 낮아지면, 그 이유를 내 안에서 찾으려 하며 하루 종일 그 생각에 
-              사로잡힐 수 있습니다. 이는 사람에 대한 집착이 아니라, 내 환경의 '예측 가능성'이 깨진 것에 대한 불안 반응입니다.
-            </p>
-
-            <h3 className="text-lg md:text-xl font-bold text-gray-800 mt-10 md:mt-12 mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-keep">
-              <span className="min-w-7 w-7 h-7 md:w-8 md:h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-xs md:text-sm">3</span>
-              왜 특정 관계를 오래 못 놓을까?
-            </h3>
-            <p className="text-sm md:text-base break-keep">
-              논리적으로는 끝난 관계라는 것을 알면서도 마음이 쉽게 정리되지 않는 이유는, 그 사람이 특별해서라기보다 
-              "내가 온전히 마음을 열고 안심했던 그 상태" 자체를 상실하는 것이 두렵기 때문입니다. 
-              {name}님에게 누군가에게 마음을 푹 놓는다는 것은 엄청난 에너지가 필요한 일이기 때문에, 
-              그 베이스캠프가 사라지는 것에 대한 심리적 저항감이 매우 크게 나타납니다.
-            </p>
-
-            <h3 className="text-lg md:text-xl font-bold text-gray-800 mt-10 md:mt-12 mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-keep">
-              <span className="min-w-7 w-7 h-7 md:w-8 md:h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs md:text-sm">4</span>
-              나를 지키는 방어 기제
-            </h3>
-            <p className="text-sm md:text-base break-keep">
-              상처를 받았을 때 화를 내거나 따지기보다는, 조용히 마음속으로 선을 긋고 상대방에 대한 기대를 거두는 방식을 취합니다. 
-              겉으로는 평소와 다름없이 대하지만 속으로는 이미 수천 킬로미터 멀어져 있는 상태입니다. 
-              이는 갈등으로 인한 추가적인 감정 소모를 막기 위한 가장 안전하고도 슬픈 방어 기제입니다.
-            </p>
-            
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 md:p-10 rounded-[1.5rem] md:rounded-3xl border border-purple-100 mt-12 md:mt-16 text-center">
-              <h4 className="font-bold text-purple-900 mb-3 md:mb-4 text-sm md:text-base">Therapist's Note</h4>
-              <p className="text-purple-800/80 text-[13px] md:text-base leading-relaxed break-keep">
-                {name}님, 당신은 너무 많은 것을 담아두고 스스로 소화하려 애쓰고 있습니다.<br/>
-                때로는 상대방의 감정을 책임지려는 그 무거운 짐을 내려놓으셔도 괜찮습니다.<br/>
-                당신의 감정 흐름은 예민한 것이 아니라, 그만큼 세상을 섬세하게 느끼는 아름다운 능력입니다.
+              <p className="text-gray-400 text-sm md:text-base font-light break-keep">
+                15~20페이지 분량의 심층 분석으로 나의 관계 패턴을 완벽히 이해하세요.
               </p>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+              {[
+                "왜 특정 관계를 오래 못 놓는가",
+                "감정 과부하 구조",
+                "관계 거리감 민감도 상세",
+                "자기방어 패턴 심층",
+                "관계 과몰입 가능성",
+                "감정 복기 메커니즘",
+                "반복되는 인간관계 흐름",
+                "감정 회피 및 통제 방식",
+                "스트레스 반응 심층"
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
+                  <span className="text-sm md:text-base text-gray-200 font-light">{item}</span>
+                  <Lock className="w-4 h-4 text-purple-400/70" />
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <button className="w-full md:w-auto px-8 py-5 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 rounded-2xl font-medium shadow-[0_8px_30px_rgb(147,51,234,0.3)] transition-all flex items-center justify-center gap-2 mx-auto">
+                <Sparkles className="w-5 h-5 text-purple-100" />
+                <span>프리미엄 리포트 열람하기</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
