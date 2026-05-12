@@ -161,7 +161,7 @@ function ResultContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
           {top4.map((item, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.1 }} 
-              className="bg-white/90 backdrop-blur-lg p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white"
+              className="bg-white/90 backdrop-blur-lg p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-white"
             >
               <div className="flex items-center gap-2 mb-3 md:mb-4">
                 <div className="w-7 h-7 md:w-8 md:h-8 rounded-xl flex items-center justify-center text-white shadow-sm" style={{ backgroundColor: item.color }}>
@@ -177,7 +177,7 @@ function ResultContent() {
 
         {/* Free Section: Charts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-50 flex flex-col items-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-gray-50 flex flex-col items-center">
             <h3 className="text-base md:text-lg font-bold text-gray-800 mb-4 md:mb-6 self-start">감정·기질 프로파일</h3>
             <div className="w-full max-w-[320px] h-[250px] md:h-64 mx-auto">
               <ResponsiveContainer width="100%" height="100%">
@@ -190,7 +190,7 @@ function ResultContent() {
             </div>
           </motion.div>
           
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-50">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-gray-50">
             <h3 className="text-base md:text-lg font-bold text-gray-800 mb-4 md:mb-6">세부 지표</h3>
             <div className="flex flex-col gap-4 md:gap-5">
               {data.map((item) => (
@@ -216,7 +216,7 @@ function ResultContent() {
             </h2>
           </div>
 
-          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-gray-100">
             <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-purple-400 rounded-full"></span>
               인간관계 패턴
@@ -227,7 +227,7 @@ function ResultContent() {
             </p>
           </div>
 
-          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-gray-100">
             <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-blue-400 rounded-full"></span>
               감정 흐름
@@ -238,7 +238,7 @@ function ResultContent() {
             </p>
           </div>
 
-          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-gray-100">
             <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-green-400 rounded-full"></span>
               자기방어 방식
@@ -249,7 +249,7 @@ function ResultContent() {
             </p>
           </div>
 
-          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-gray-100">
+          <div className="bg-white/90 p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.02)] border border-gray-100">
             <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-pink-400 rounded-full"></span>
               감정 피로 구조
@@ -300,7 +300,7 @@ function ResultContent() {
             </div>
 
             <div className="text-center">
-              <button className="w-full md:w-auto px-8 py-5 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 rounded-2xl font-medium shadow-[0_8px_30px_rgb(147,51,234,0.3)] transition-all flex items-center justify-center gap-2 mx-auto">
+              <button className="w-full md:w-auto px-8 py-5 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 rounded-2xl font-medium shadow-[0_8px_30px_rgba(147,51,234,0.3)] transition-all flex items-center justify-center gap-2 mx-auto">
                 <Sparkles className="w-5 h-5 text-purple-100" />
                 <span>프리미엄 리포트 열람하기</span>
               </button>
