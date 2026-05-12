@@ -51,22 +51,35 @@ function ResultContent() {
   const age = searchParams.get("age") || "";
   const [data, setData] = useState<any[]>([]);
   const resultRef = useRef<HTMLDivElement>(null);
+  const photocardRef = useRef<HTMLDivElement>(null);
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
+  const handleShareKakao = async () => {
+    if (!photocardRef.current) return;
+    try {
+      const canvas = await html2canvas(photocardRef.current, { scale: 1, useCORS: true });
+      const imageBlob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!imageBlob) throw new Error("Blob creation failed");
+
+      const file = new File([imageBlob], `${name}_감정흐름포토카드.png`, { type: 'image/png' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
-          title: 'TCI 기반 심층 감정 흐름 분석',
-          text: `${name}님의 프리미엄 감정 흐름 분석 결과를 확인해보세요!`,
-          url: window.location.href,
+          title: 'TCI LAB 리포트',
+          text: `${name}님의 감정 흐름 분석 결과입니다!`,
+          files: [file]
         });
-      } catch (err) {
-        console.error('Share failed', err);
+      } else {
+        const url = URL.createObjectURL(imageBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${name}_감정흐름포토카드.png`;
+        link.click();
+        URL.revokeObjectURL(url);
+        alert('예쁜 포토카드 이미지가 저장되었습니다. 카카오톡 채팅방에 직접 첨부해서 공유해보세요! (기기 자동 공유 미지원 환경)');
       }
-    } else {
-      // Fallback for desktop or unsupported browsers
-      navigator.clipboard.writeText(window.location.href);
-      alert('결과 링크가 클립보드에 복사되었습니다. 카카오톡에 붙여넣기 해주세요!');
+    } catch (err) {
+      console.error('Share failed', err);
+      alert('이미지 생성에 실패했습니다.');
     }
   };
 
@@ -77,7 +90,7 @@ function ResultContent() {
       const image = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = image;
-      link.download = `${name}_감정흐름분석.png`;
+      link.download = `${name}_전체분석리포트.png`;
       link.click();
     } catch (err) {
       console.error('Image capture failed', err);
@@ -299,11 +312,11 @@ function ResultContent() {
       {/* Share and Download Buttons */}
         <div className="mt-8 md:mt-12 flex flex-col md:flex-row gap-3 md:gap-4 justify-center px-4 md:px-0 w-full max-w-4xl mx-auto">
           <button 
-            onClick={handleShare}
+            onClick={handleShareKakao}
             className="flex items-center justify-center gap-2 px-6 md:px-8 py-4 bg-[#FEE500] hover:bg-[#FDD800] text-[#3C1E1E] font-semibold rounded-2xl shadow-sm transition-all w-full md:w-auto text-sm md:text-base"
           >
             <Share2 className="w-4 h-4 md:w-5 md:h-5" />
-            카카오톡으로 결과 공유하기
+            카카오톡 포토카드 공유하기
           </button>
           
           <button 
@@ -311,8 +324,67 @@ function ResultContent() {
             className="flex items-center justify-center gap-2 px-6 md:px-8 py-4 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-semibold rounded-2xl shadow-sm transition-all w-full md:w-auto text-sm md:text-base"
           >
             <DownloadIcon className="w-4 h-4 md:w-5 md:h-5" />
-            이미지로 저장하기
+            전체 리포트 화면 저장
           </button>
+        </div>
+
+        {/* Hidden Photo Card for Sharing */}
+        <div className="fixed top-[-9999px] left-[-9999px] pointer-events-none">
+          <div ref={photocardRef} className="w-[1080px] h-[1920px] bg-gradient-to-br from-[#fdfbf7] via-[#f3e8ff] to-[#e0e7ff] flex flex-col items-center justify-between p-24 font-sans relative overflow-hidden" style={{ letterSpacing: '-0.02em' }}>
+            {/* Background Decorative Blur */}
+            <div className="absolute top-[-10%] right-[-10%] w-[800px] h-[800px] bg-purple-300/40 rounded-full blur-[120px]"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[800px] h-[800px] bg-blue-300/40 rounded-full blur-[120px]"></div>
+            
+            {/* Top Header */}
+            <div className="flex flex-col items-center z-10 w-full mt-24">
+              <div className="px-8 py-3 bg-white/70 backdrop-blur-md rounded-full text-purple-600 text-2xl font-bold tracking-widest mb-12 border border-white shadow-sm">
+                PREMIUM EMOTIONAL INSIGHT
+              </div>
+              <h1 className="text-7xl font-light text-gray-800 text-center leading-tight">
+                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">{name}</span> 님의<br/>
+                감정 흐름 프로필
+              </h1>
+              <div className="mt-12 flex gap-4">
+                <span className="px-8 py-3 bg-white/80 rounded-full text-gray-500 text-3xl font-medium shadow-sm">{gender}</span>
+                {age && <span className="px-8 py-3 bg-white/80 rounded-full text-gray-500 text-3xl font-medium shadow-sm">{age}세</span>}
+              </div>
+            </div>
+
+            {/* Middle Content */}
+            <div className="z-10 w-full px-12 flex flex-col gap-12 mt-16 flex-1 justify-center">
+              <div className="bg-white/80 backdrop-blur-xl p-16 rounded-[4rem] shadow-2xl border border-white">
+                <h2 className="text-4xl font-bold text-gray-800 mb-8 flex items-center gap-4">
+                  <Heart className="w-12 h-12 text-purple-500" />
+                  핵심 관계 패턴
+                </h2>
+                <p className="text-[2.5rem] text-gray-600 leading-normal font-light break-keep">
+                  "당신은 관계 자체보다, 관계의 감정 흐름 변화에 더 크게 반응하는 경향이 있습니다. 
+                  가까워질수록 상대 반응과 거리감 변화를 더 세밀하게 읽게 될 가능성이 있습니다."
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-8 mt-8">
+                {top4.slice(0, 4).map((item, i) => (
+                  <div key={i} className="bg-white/90 backdrop-blur-xl p-12 rounded-[3rem] shadow-xl border border-white flex flex-col items-center text-center">
+                    <div className="w-24 h-24 rounded-[2rem] flex items-center justify-center text-white mb-6 shadow-md" style={{ backgroundColor: item.color }}>
+                      <Sparkles className="w-12 h-12" />
+                    </div>
+                    <span className="text-4xl font-bold text-gray-700 mb-4">{item.name}</span>
+                    <span className="text-6xl font-light text-gray-800">{item.avg}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="z-10 w-full flex flex-col items-center mb-16 mt-16">
+              <p className="text-4xl font-bold text-gray-800">TCI LAB</p>
+              <p className="text-3xl text-gray-500 mt-4 font-light">나만의 감정 흐름 분석하기</p>
+              <div className="mt-8 px-8 py-4 bg-gray-900 rounded-full">
+                <p className="text-2xl text-white font-medium tracking-wide">tci-report-app.vercel.app</p>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
