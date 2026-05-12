@@ -123,7 +123,7 @@ function ResultContent() {
       <div ref={resultRef} className="w-full max-w-full">
         {/* Hero Section */}
         <div className="relative w-full h-[400px] md:h-[450px] overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-100/40 via-blue-50/30 to-pink-50/20"></div>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom right, rgba(243, 232, 255, 0.4), rgba(239, 246, 255, 0.3), rgba(253, 242, 248, 0.2))' }}></div>
         <div className="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-purple-200/30 rounded-full blur-[80px] md:blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[200px] md:w-[400px] h-[200px] md:h-[400px] bg-blue-200/30 rounded-full blur-[80px] md:blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
         
@@ -261,7 +261,7 @@ function ResultContent() {
 
         {/* Premium Locked Section */}
         <div className="relative w-full">
-          <div className="bg-gradient-to-b from-gray-900 to-gray-800 p-8 md:p-14 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl text-white max-w-none w-full relative overflow-hidden">
+          <div className="p-8 md:p-14 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl text-white max-w-none w-full relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #111827, #1f2937)' }}>
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px]"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px]"></div>
             
@@ -271,7 +271,7 @@ function ResultContent() {
               </div>
               <h2 className="text-2xl md:text-3xl font-light mb-4 break-keep">
                 내 감정의 깊은 곳을 읽는<br />
-                <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-300">프리미엄 심층 리포트</span>
+                <span className="font-semibold text-purple-300">프리미엄 심층 리포트</span>
               </h2>
               <p className="text-gray-400 text-sm md:text-base font-light break-keep">
                 15~20페이지 분량의 심층 분석으로 나의 관계 패턴을 완벽히 이해하세요.
@@ -298,7 +298,7 @@ function ResultContent() {
             </div>
 
             <div className="text-center">
-              <button className="w-full md:w-auto px-8 py-5 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 rounded-2xl font-medium shadow-[0_8px_30px_rgba(147,51,234,0.3)] transition-all flex items-center justify-center gap-2 mx-auto">
+              <button className="w-full md:w-auto px-8 py-5 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl font-medium shadow-[0_8px_30px_rgba(147,51,234,0.3)] transition-all flex items-center justify-center gap-2 mx-auto">
                 <Sparkles className="w-5 h-5 text-purple-100" />
                 <span>프리미엄 리포트 열람하기</span>
               </button>
@@ -328,7 +328,7 @@ function ResultContent() {
 
         {/* Hidden Photo Card for Sharing */}
         <div className="fixed top-[-9999px] left-[-9999px] pointer-events-none">
-          <div ref={photocardRef} className="w-[1080px] h-[1920px] bg-gradient-to-br from-[#fdfbf7] via-[#f3e8ff] to-[#e0e7ff] flex flex-col items-center justify-between p-24 font-sans relative overflow-hidden" style={{ letterSpacing: '-0.02em' }}>
+          <div ref={photocardRef} className="w-[1080px] h-[1920px] flex flex-col items-center justify-between p-24 font-sans relative overflow-hidden" style={{ letterSpacing: '-0.02em', background: 'linear-gradient(to bottom right, #fdfbf7, #f3e8ff, #e0e7ff)' }}>
             {/* Background Decorative Blur */}
             <div className="absolute top-[-10%] right-[-10%] w-[800px] h-[800px] bg-purple-300/40 rounded-full blur-[120px]"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[800px] h-[800px] bg-blue-300/40 rounded-full blur-[120px]"></div>
@@ -339,7 +339,7 @@ function ResultContent() {
                 PREMIUM EMOTIONAL INSIGHT
               </div>
               <h1 className="text-7xl font-light text-gray-800 text-center leading-tight">
-                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">{name}</span> 님의<br/>
+                <span className="font-bold text-purple-600">{name}</span> 님의<br/>
                 감정 흐름 프로필
               </h1>
               <div className="mt-12 flex gap-4">
