@@ -125,7 +125,7 @@ export default function Home() {
           </div>
           
           <div className="mt-10 text-[10px] md:text-xs text-gray-400/80 font-light leading-relaxed break-keep px-4">
-            <p>본 검사는 TCI의 7개 기질 구조를 참고하여 재해석된 유사 심층 성향검사입니다.</p>
+            <p>TCI의 7개 기질 구조를 참고해 제작된 감정 흐름 분석 검사입니다.</p>
             <p className="mt-1">의학적 진단 목적이 아닌 자기이해 기반 감정 흐름 분석 리포트입니다.</p>
           </div>
         </div>

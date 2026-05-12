@@ -51,6 +51,7 @@ function ResultContent() {
   const age = searchParams.get("age") || "";
   const [data, setData] = useState<any[]>([]);
   const [modal, setModal] = useState<{ isOpen: boolean, message: string, isError: boolean }>({ isOpen: false, message: "", isError: false });
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const photocardRef = useRef<HTMLDivElement>(null);
 
@@ -77,12 +78,8 @@ function ResultContent() {
         showModal("성공적으로 공유되었습니다!", false);
       } else {
         const url = URL.createObjectURL(imageBlob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${name}_감정흐름포토카드.png`;
-        link.click();
-        URL.revokeObjectURL(url);
-        showModal("포토카드가 저장되었습니다. 카카오톡에 첨부해 보세요!", false);
+        setPreviewImage(url);
+        showModal("이미지를 꾹 눌러서 저장/복사 후 공유해주세요!", false);
       }
     } catch (err) {
       console.error('Share failed', err);
@@ -413,6 +410,31 @@ function ResultContent() {
               <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed break-keep">
                 {modal.message}
               </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Image Preview Modal Fallback */}
+      <AnimatePresence>
+        {previewImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[99999] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-4"
+            onClick={() => setPreviewImage(null)}
+          >
+            <div className="absolute top-6 right-6 text-white text-sm bg-white/20 px-4 py-2 rounded-full backdrop-blur-md cursor-pointer border border-white/30">
+              닫기 ✕
+            </div>
+            <div className="bg-white p-3 rounded-[2rem] shadow-2xl max-w-sm w-full flex flex-col relative" onClick={e => e.stopPropagation()}>
+              <p className="text-center text-gray-800 font-semibold pt-2 pb-4 text-sm tracking-wide">
+                👇 이미지를 꾹 눌러서 저장하거나 복사하세요!
+              </p>
+              <div className="overflow-hidden w-full rounded-2xl bg-gray-50 flex items-center justify-center" style={{ maxHeight: '70vh' }}>
+                <img src={previewImage} alt="포토카드 미리보기" className="w-full h-full object-contain block" />
+              </div>
             </div>
           </motion.div>
         )}
