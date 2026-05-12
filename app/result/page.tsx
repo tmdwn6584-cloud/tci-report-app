@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { questions } from "@/data/questions";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { Heart, Shield, Sparkles, Activity, Lock, Share2, Download as DownloadIcon } from "lucide-react";
-import html2canvas from "html2canvas";
+import * as htmlToImage from "html-to-image";
 
 const dimensionMap = {
   NS: "자극추구", HA: "위험회피", RD: "사회적 민감성", P: "인내력",
@@ -56,8 +56,7 @@ function ResultContent() {
   const handleShareKakao = async () => {
     if (!photocardRef.current) return;
     try {
-      const canvas = await html2canvas(photocardRef.current, { scale: 1, useCORS: true });
-      const imageBlob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+      const imageBlob = await htmlToImage.toBlob(photocardRef.current, { pixelRatio: 1 });
       if (!imageBlob) throw new Error("Blob creation failed");
 
       const file = new File([imageBlob], `${name}_감정흐름포토카드.png`, { type: 'image/png' });
@@ -86,10 +85,9 @@ function ResultContent() {
   const handleDownloadImage = async () => {
     if (!resultRef.current) return;
     try {
-      const canvas = await html2canvas(resultRef.current, { scale: 2, useCORS: true, backgroundColor: '#fdfbf7' });
-      const image = canvas.toDataURL("image/png");
+      const dataUrl = await htmlToImage.toPng(resultRef.current, { pixelRatio: 2, backgroundColor: '#fdfbf7' });
       const link = document.createElement("a");
-      link.href = image;
+      link.href = dataUrl;
       link.download = `${name}_전체분석리포트.png`;
       link.click();
     } catch (err) {
