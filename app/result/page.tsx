@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { questions } from "@/data/questions";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { Heart, Shield, Sparkles, Activity, Lock, Share2, Download as DownloadIcon } from "lucide-react";
@@ -50,12 +50,19 @@ function ResultContent() {
   const gender = searchParams.get("g") || "비공개";
   const age = searchParams.get("age") || "";
   const [data, setData] = useState<any[]>([]);
+  const [modal, setModal] = useState<{ isOpen: boolean, message: string, isError: boolean }>({ isOpen: false, message: "", isError: false });
   const resultRef = useRef<HTMLDivElement>(null);
   const photocardRef = useRef<HTMLDivElement>(null);
+
+  const showModal = (message: string, isError = false) => {
+    setModal({ isOpen: true, message, isError });
+    setTimeout(() => setModal(prev => ({ ...prev, isOpen: false })), 4000);
+  };
 
   const handleShareKakao = async () => {
     if (!photocardRef.current) return;
     try {
+      showModal("포토카드를 준비 중입니다...", false);
       const imageBlob = await htmlToImage.toBlob(photocardRef.current, { pixelRatio: 1 });
       if (!imageBlob) throw new Error("Blob creation failed");
 
@@ -67,6 +74,7 @@ function ResultContent() {
           text: `${name}님의 감정 흐름 분석 결과입니다!`,
           files: [file]
         });
+        showModal("성공적으로 공유되었습니다!", false);
       } else {
         const url = URL.createObjectURL(imageBlob);
         const link = document.createElement("a");
@@ -74,25 +82,27 @@ function ResultContent() {
         link.download = `${name}_감정흐름포토카드.png`;
         link.click();
         URL.revokeObjectURL(url);
-        alert('예쁜 포토카드 이미지가 저장되었습니다. 카카오톡 채팅방에 직접 첨부해서 공유해보세요! (기기 자동 공유 미지원 환경)');
+        showModal("포토카드가 저장되었습니다. 카카오톡에 첨부해 보세요!", false);
       }
     } catch (err) {
       console.error('Share failed', err);
-      alert('이미지 생성에 실패했습니다.');
+      showModal("이미지 생성에 실패했습니다.", true);
     }
   };
 
   const handleDownloadImage = async () => {
     if (!resultRef.current) return;
     try {
+      showModal("리포트 화면을 저장 중입니다...", false);
       const dataUrl = await htmlToImage.toPng(resultRef.current, { pixelRatio: 2, backgroundColor: '#fdfbf7' });
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = `${name}_전체분석리포트.png`;
       link.click();
+      showModal("전체 리포트가 성공적으로 저장되었습니다!", false);
     } catch (err) {
       console.error('Image capture failed', err);
-      alert('이미지 저장에 실패했습니다.');
+      showModal("이미지 저장에 실패했습니다.", true);
     }
   };
 
@@ -386,6 +396,27 @@ function ResultContent() {
         </div>
 
       </div>
+
+      {/* Custom Modal / Toast */}
+      <AnimatePresence>
+        {modal.isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-10 left-0 right-0 z-[9999] flex justify-center px-4 pointer-events-none"
+          >
+            <div className="bg-white/95 backdrop-blur-xl px-6 md:px-8 py-5 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.12)] border border-gray-100 flex items-center gap-4 max-w-md w-full pointer-events-auto">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${modal.isError ? 'bg-red-50 text-red-500' : 'bg-purple-50 text-purple-600'}`}>
+                {modal.isError ? <Activity className="w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
+              </div>
+              <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed break-keep">
+                {modal.message}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
