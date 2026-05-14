@@ -19,16 +19,19 @@ const dimensionColors = {
   SD: "#2dd4bf", C: "#c084fc", ST: "#a78bfa"
 };
 
-const calculateScores = (targetQuestions: { dimension: string; reverse?: boolean; }[], answers: number[]) => {
-  const scores = { NS: 0, HA: 0, RD: 0, P: 0, SD: 0, C: 0, ST: 0 };
-  const counts = { NS: 0, HA: 0, RD: 0, P: 0, SD: 0, C: 0, ST: 0 };
+type DimensionKey = keyof typeof dimensionMap;
+
+const calculateScores = (targetQuestions: { dimension: DimensionKey; reverse?: boolean; }[], answers: number[]) => {
+  const scores: Record<DimensionKey, number> = { NS: 0, HA: 0, RD: 0, P: 0, SD: 0, C: 0, ST: 0 };
+  const counts: Record<DimensionKey, number> = { NS: 0, HA: 0, RD: 0, P: 0, SD: 0, C: 0, ST: 0 };
 
   targetQuestions.forEach((q, idx) => {
     if (answers[idx] === undefined) return;
     let val = answers[idx];
     if (q.reverse) val = 5 - val;
-    scores[q.dimension] += val;
-    counts[q.dimension] += 1;
+    const key = q.dimension as DimensionKey;
+    scores[key] += val;
+    counts[key] += 1;
   });
 
   return Object.keys(scores).map((key) => {
