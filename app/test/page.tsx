@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { questions } from "@/data/questions";
@@ -14,8 +14,6 @@ const CHOICES = [
 ];
 
 const PAGE_SIZE = 5;
-const MAX_QUESTIONS = 180;
-const testQuestions = questions.slice(0, MAX_QUESTIONS);
 
 function TestContent() {
   const router = useRouter();
@@ -23,19 +21,115 @@ function TestContent() {
   const name = searchParams.get("n") || "사용자";
   const gender = searchParams.get("g") || "";
   const age = searchParams.get("age") || "";
+  const mode = searchParams.get("mode") === "lite" ? "lite" : "full";
+  const maxQuestions = mode === "lite" ? 20 : 180;
+  const testQuestions = questions.slice(0, maxQuestions);
   
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<number[]>(new Array(testQuestions.length).fill(0));
+  const [questionTimes, setQuestionTimes] = useState<number[]>(new Array(testQuestions.length).fill(0));
+  const [questionStartTimes, setQuestionStartTimes] = useState<number[]>(new Array(testQuestions.length).fill(0));
+  const [sessionId, setSessionId] = useState("");
+  const [startedAt, setStartedAt] = useState("");
 
   const totalPages = Math.ceil(testQuestions.length / PAGE_SIZE);
   const startIdx = currentPage * PAGE_SIZE;
   const currentQuestions = testQuestions.slice(startIdx, startIdx + PAGE_SIZE);
   const progress = ((currentPage + 1) / totalPages) * 100;
 
-  const handleSelect = (questionIndex: number, value: number) => {
+  useEffect(() => {
+    if (!sessionId) {
+      const existing = sessionStorage.getItem("tciSessionId");
+      const newId = existing || crypto.randomUUID();
+      sessionStorage.setItem("tciSessionId", newId);
+      setSessionId(newId);
+    }
+
+    if (!startedAt) {
+      setStartedAt(new Date().toISOString());
+    }
+
+    setQuestionStartTimes((prev) => {
+      const next = [...prev];
+      for (let i = 0; i < PAGE_SIZE && i < testQuestions.length; i += 1) {
+        if (!next[i]) next[i] = Date.now();
+      }
+      return next;
+    });
+  }, [sessionId, startedAt, testQuestions.length]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      if (!sessionId) return;
+      const payload = {
+        type: "progress",
+        sessionId,
+        name,
+        gender,
+        age,
+        mode,
+        status: "incomplete",
+        startedAt,
+        currentQuestionIndex: currentPage * PAGE_SIZE + currentQuestions.length - 1,
+        answersString: answers.join(""),
+        questionTimes,
+      };
+      const body = JSON.stringify(payload);
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon("/api/results", body);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, [sessionId, name, gender, age, mode, startedAt, currentPage, currentQuestions.length, answers, questionTimes]);
+
+  const saveSession = async (payload: any) => {
+    try {
+      await fetch("/api/results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      console.error("Failed to save session", error);
+    }
+  };
+
+  const handleSelect = async (questionIndex: number, value: number) => {
+    const globalIdx = startIdx + questionIndex;
     const newAnswers = [...answers];
-    newAnswers[startIdx + questionIndex] = value;
+    newAnswers[globalIdx] = value;
+
+    const now = Date.now();
+    const elapsed = questionStartTimes[globalIdx]
+      ? Number(((now - questionStartTimes[globalIdx]) / 1000).toFixed(2))
+      : 0;
+
+    const newTimes = [...questionTimes];
+    newTimes[globalIdx] = elapsed;
+
     setAnswers(newAnswers);
+    setQuestionTimes(newTimes);
+    setQuestionStartTimes((prev) => {
+      const next = [...prev];
+      next[globalIdx] = now;
+      return next;
+    });
+
+    await saveSession({
+      type: "progress",
+      sessionId,
+      name,
+      gender,
+      age,
+      mode,
+      status: "incomplete",
+      startedAt,
+      currentQuestionIndex: globalIdx,
+      answersString: newAnswers.join(""),
+      questionTimes: newTimes,
+    });
   };
 
   const handleNext = () => {
@@ -49,13 +143,51 @@ function TestContent() {
 
     if (currentPage < totalPages - 1) {
       setCurrentPage((prev) => prev + 1);
+      setQuestionStartTimes((prev) => {
+        const next = [...prev];
+        const nextPageStart = (currentPage + 1) * PAGE_SIZE;
+        for (let i = 0; i < PAGE_SIZE && nextPageStart + i < testQuestions.length; i += 1) {
+          if (!next[nextPageStart + i]) next[nextPageStart + i] = Date.now();
+        }
+        return next;
+      });
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      saveSession({
+        type: "progress",
+        sessionId,
+        name,
+        gender,
+        age,
+        mode,
+        status: "incomplete",
+        startedAt,
+        currentQuestionIndex: startIdx + currentQuestions.length - 1,
+        answersString: answers.join(""),
+        questionTimes,
+      });
     } else {
       const answerString = answers.join("");
+      const finishedAt = new Date().toISOString();
+      saveSession({
+        type: "complete",
+        sessionId,
+        name,
+        gender,
+        age,
+        mode,
+        status: "completed",
+        startedAt,
+        finishedAt,
+        currentQuestionIndex: maxQuestions - 1,
+        answersString: answerString,
+        questionTimes,
+      });
       const params = new URLSearchParams({
         n: name,
         g: gender,
         age: age,
+        mode,
         a: answerString
       });
       router.push(`/result?${params.toString()}`);
@@ -76,9 +208,9 @@ function TestContent() {
       <div className="w-full max-w-2xl z-10 flex flex-col pt-4 md:pt-10 pb-24 md:pb-24">
         
         <div className="mb-6 md:mb-10 sticky top-0 bg-[#fdfbf7]/95 backdrop-blur-md pt-2 pb-4 md:pt-4 md:pb-6 z-20">
-          <div className="flex justify-between items-end mb-3">
+          <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-end mb-3">
             <span className="text-purple-600 font-semibold text-sm tracking-wide">
-              {name}님의 감정 흐름 분석 중
+              {name}님의 {mode === 'lite' ? '빠른 검사' : '정밀 검사'} 분석 중
             </span>
             <span className="text-xs text-gray-400 font-medium">{currentPage + 1} / {totalPages} 페이지</span>
           </div>

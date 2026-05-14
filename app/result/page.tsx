@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense, useRef } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { questions } from "@/data/questions";
@@ -18,11 +19,11 @@ const dimensionColors = {
   SD: "#2dd4bf", C: "#c084fc", ST: "#a78bfa"
 };
 
-const calculateScores = (answers: number[]) => {
+const calculateScores = (targetQuestions: { dimension: string; reverse?: boolean; }[], answers: number[]) => {
   const scores = { NS: 0, HA: 0, RD: 0, P: 0, SD: 0, C: 0, ST: 0 };
   const counts = { NS: 0, HA: 0, RD: 0, P: 0, SD: 0, C: 0, ST: 0 };
 
-  questions.forEach((q, idx) => {
+  targetQuestions.forEach((q, idx) => {
     if (answers[idx] === undefined) return;
     let val = answers[idx];
     if (q.reverse) val = 5 - val;
@@ -103,23 +104,32 @@ function ResultContent() {
     }
   };
 
+  const mode = searchParams.get("mode") === "lite" ? "lite" : "full";
+  const fullTestParams = new URLSearchParams({
+    n: name,
+    g: gender,
+    age,
+    mode: 'full'
+  }).toString();
+
   useEffect(() => {
     const a = searchParams.get("a");
     if (a) {
       const answers = a.split("").map(Number);
-      const processed = calculateScores(answers);
+      const targetQuestions = mode === "lite" ? questions.slice(0, 20) : questions;
+      const processed = calculateScores(targetQuestions, answers);
       setData(processed);
 
       // Save to localStorage
       const history = JSON.parse(localStorage.getItem("tci_history") || "[]");
       const newEntry = {
-        id: Date.now(), name, gender, age,
+        id: Date.now(), name, gender, age, mode,
         date: new Date().toLocaleDateString('ko-KR'),
         answersString: a, data: processed
       };
       localStorage.setItem("tci_history", JSON.stringify([newEntry, ...history]));
     }
-  }, [searchParams, name, gender, age]);
+  }, [searchParams, name, gender, age, mode]);
 
   if (data.length === 0) return <div className="min-h-screen bg-[#fdfbf7]" />;
 
@@ -313,7 +323,15 @@ function ResultContent() {
           </div>
         </div>
       </div>
-        
+
+      {mode === 'lite' && (
+        <div className="mt-8 md:mt-12 text-center px-4 md:px-0 w-full max-w-4xl mx-auto">
+          <Link href={`/test?${fullTestParams}`} className="inline-flex items-center justify-center mx-auto px-6 py-4 bg-white border border-purple-200 text-purple-700 hover:bg-purple-50 rounded-2xl shadow-sm transition-all text-sm md:text-base font-medium">
+            더 자세한 분석을 위해 180문항 정밀 검사 받기
+          </Link>
+        </div>
+      )}
+
       {/* Share and Download Buttons */}
         <div className="mt-8 md:mt-12 flex flex-col md:flex-row gap-3 md:gap-4 justify-center px-4 md:px-0 w-full max-w-4xl mx-auto">
           <button 

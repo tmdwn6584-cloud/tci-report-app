@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { questions } from "@/data/questions";
-import { Download, Lock } from "lucide-react";
+import { Download, Lock, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -11,10 +11,22 @@ export default function AdminPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("tci_history");
-    if (saved) {
-      setHistory(JSON.parse(saved));
-    }
+    const loadHistory = async () => {
+      try {
+        const res = await fetch("/api/results");
+        if (!res.ok) throw new Error("Failed to load results");
+        const json = await res.json();
+        setHistory(json);
+      } catch (err) {
+        console.error(err);
+        const saved = localStorage.getItem("tci_history");
+        if (saved) {
+          setHistory(JSON.parse(saved));
+        }
+      }
+    };
+
+    loadHistory();
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -34,17 +46,20 @@ export default function AdminPage() {
     if (history.length === 0) return;
 
     // Build CSV header
-    const headers = ["이름", "성별", "나이", "날짜", ...questions.map(q => q.id)];
+    const headers = ["이름", "성별", "나이", "모드", "상태", "일시", ...questions.map(q => q.id)];
     let csvContent = headers.join(",") + "\n";
 
     // Build rows
     history.forEach((row) => {
-      const answers = row.answersString ? row.answersString.split("") : new Array(49).fill("");
+      const answers = row.answersString ? row.answersString.split("") : [];
+      while (answers.length < questions.length) answers.push("");
       const rowData = [
         row.name,
         row.gender || "-",
         row.age || "-",
-        row.date,
+        row.mode || "-",
+        row.status || "-",
+        row.date || row.finishedAt || row.createdAt || "-",
         ...answers
       ];
       csvContent += rowData.join(",") + "\n";
@@ -99,6 +114,50 @@ export default function AdminPage() {
     window.dispatchEvent(new Event("adminLoginStatusChanged"));
   };
 
+  const completedResults = history.filter((item) => item.status === "completed");
+
+  const averageTimeData = useMemo(() => {
+    const averages = questions.map((question, index) => {
+      const values = completedResults
+        .map((item) => {
+          try {
+            const times = JSON.parse(item.questionTimes || "[]");
+            return typeof times[index] === "number" ? times[index] : null;
+          } catch {
+            return null;
+          }
+        })
+        .filter((time): time is number => typeof time === "number" && time > 0);
+
+      const avg = values.length > 0 ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+      return {
+        question: question.id.toUpperCase(),
+        avgTime: Number(avg.toFixed(2)),
+        text: question.text,
+      };
+    });
+
+    return averages.sort((a, b) => b.avgTime - a.avgTime).slice(0, 12);
+  }, [completedResults]);
+
+  const dropoffData = useMemo(() => {
+    const counts: Record<string, number> = {};
+
+    history.forEach((item) => {
+      if (item.status === "completed") return;
+      const index = typeof item.currentQuestionIndex === "number"
+        ? item.currentQuestionIndex
+        : Math.max(0, (item.answersString || "").replace(/0/g, "").length - 1);
+      const question = questions[index]?.id?.toUpperCase() || "START";
+      counts[question] = (counts[question] || 0) + 1;
+    });
+
+    return Object.entries(counts)
+      .map(([question, value]) => ({ question, count: value }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 12);
+  }, [history]);
+
   return (
     <div className="p-10">
       <div className="flex justify-between items-end mb-8">
@@ -124,6 +183,34 @@ export default function AdminPage() {
         </div>
       </div>
 
+      <div className="grid gap-6 mb-8 xl:grid-cols-[1fr_1fr]">
+        <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">가장 오래 고민하는 문항</h2>
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart data={averageTimeData} margin={{ top: 8, right: 16, left: -20, bottom: 12 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis dataKey="question" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} />
+              <Tooltip formatter={(value: number) => `${value}초`} />
+              <Bar dataKey="avgTime" fill="#7c3aed" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">가장 많이 이탈하는 문항</h2>
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart data={dropoffData} margin={{ top: 8, right: 16, left: -20, bottom: 12 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis dataKey="question" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} />
+              <Tooltip formatter={(value: number) => `${value}명`} />
+              <Bar dataKey="count" fill="#10b981" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left whitespace-nowrap">
@@ -132,7 +219,9 @@ export default function AdminPage() {
                 <th className="px-6 py-4 font-bold">이름</th>
                 <th className="px-6 py-4 font-bold">성별</th>
                 <th className="px-6 py-4 font-bold">나이</th>
-                <th className="px-6 py-4 font-bold">검사일자</th>
+                <th className="px-6 py-4 font-bold">모드</th>
+                <th className="px-6 py-4 font-bold">상태</th>
+                <th className="px-6 py-4 font-bold">검사일시</th>
                 {questions.map((q) => (
                   <th key={q.id} className="px-3 py-4 font-semibold text-gray-500" title={q.text}>
                     {q.id.toUpperCase()}
@@ -149,13 +238,16 @@ export default function AdminPage() {
                 </tr>
               ) : (
                 history.map((row, idx) => {
-                  const answers = row.answersString ? row.answersString.split("") : new Array(49).fill("-");
+                  const answers = row.answersString ? row.answersString.split("") : [];
+                  while (answers.length < questions.length) answers.push("-");
                   return (
                     <tr key={idx} className="bg-white border-b border-gray-100 hover:bg-purple-50/30 transition-colors">
                       <td className="px-6 py-4 font-medium text-gray-900">{row.name}</td>
                       <td className="px-6 py-4 text-gray-600">{row.gender || "-"}</td>
                       <td className="px-6 py-4 text-gray-600">{row.age || "-"}</td>
-                      <td className="px-6 py-4 text-gray-500">{row.date}</td>
+                      <td className="px-6 py-4 text-gray-600">{row.mode || "-"}</td>
+                      <td className="px-6 py-4 text-gray-600">{row.status || "-"}</td>
+                      <td className="px-6 py-4 text-gray-500">{row.date || row.finishedAt || row.createdAt || "-"}</td>
                       {answers.map((ans: string, i: number) => (
                         <td key={i} className="px-3 py-4 text-center">
                           <span className={`inline-block w-6 h-6 rounded-full text-xs font-bold leading-6 ${

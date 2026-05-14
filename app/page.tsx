@@ -10,6 +10,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
+  const [mode, setMode] = useState<"full" | "lite">("full");
 
   const handleStart = () => {
     if (!name.trim()) {
@@ -28,7 +29,8 @@ export default function Home() {
     const params = new URLSearchParams({
       n: name,
       g: gender,
-      age: age
+      age: age,
+      mode,
     });
     
     router.push(`/test?${params.toString()}`);
@@ -62,6 +64,25 @@ export default function Home() {
             왜 특정 관계를 오래 못 놓는지,<br className="hidden md:block" />
             당신의 심리 구조 안에서 다정하게 설명해 드립니다.
           </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-left w-full">
+            <button
+              type="button"
+              onClick={() => setMode("full")}
+              className={`w-full rounded-3xl border px-5 py-4 text-left transition-all ${mode === "full" ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-transparent shadow-lg' : 'bg-white/90 border-gray-200 text-gray-700 hover:border-purple-300 hover:bg-purple-50'}`}
+            >
+              <div className="text-sm font-semibold">정밀 검사</div>
+              <div className="mt-2 text-xs text-gray-500">180문항 · 약 15분</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("lite")}
+              className={`w-full rounded-3xl border px-5 py-4 text-left transition-all ${mode === "lite" ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-transparent shadow-lg' : 'bg-white/90 border-gray-200 text-gray-700 hover:border-purple-300 hover:bg-purple-50'}`}
+            >
+              <div className="text-sm font-semibold">빠른 검사</div>
+              <div className="mt-2 text-xs text-gray-500">20문항 · 약 3분</div>
+            </button>
+          </div>
 
           <div className="flex flex-col gap-4 md:gap-5 mb-8 md:mb-10 text-left w-full">
             <div>
@@ -114,14 +135,14 @@ export default function Home() {
             onClick={handleStart}
             className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-medium py-4 px-8 rounded-2xl shadow-[0_8px_20px_rgb(147,51,234,0.2)] transition-all flex items-center justify-center group"
           >
-            <span className="tracking-wide">감정 흐름 분석 시작하기</span>
+            <span className="tracking-wide">{mode === 'full' ? '정밀 검사 시작하기' : '빠른 검사 시작하기'}</span>
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform opacity-80" />
           </motion.button>
           
           <div className="mt-6 text-xs text-gray-400 font-light flex justify-center gap-4 tracking-wider">
-            <span>총 180문항</span>
+            <span>{mode === 'full' ? '총 180문항' : '총 20문항'}</span>
             <span className="opacity-50">|</span>
-            <span>약 15분 소요</span>
+            <span>{mode === 'full' ? '약 15분 소요' : '약 3분 소요'}</span>
           </div>
           
           <div className="mt-10 text-[10px] md:text-xs text-gray-400/80 font-light leading-relaxed break-keep px-4">
