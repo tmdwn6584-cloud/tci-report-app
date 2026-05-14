@@ -11,6 +11,26 @@ export default function AdminPage() {
   const [history, setHistory] = useState<any[]>([]);
   const [error, setError] = useState(false);
 
+  const parseAnswers = (value: unknown) => {
+    if (Array.isArray(value)) return value.map((item) => String(item));
+    if (typeof value === "string") return value.split("");
+    if (typeof value === "number") return String(value).split("");
+    return [];
+  };
+
+  const parseQuestionTimes = (value: unknown) => {
+    if (Array.isArray(value)) return value.map((item) => (typeof item === "number" ? item : Number(item))).filter((item) => !Number.isNaN(item));
+    if (typeof value === "string") {
+      try {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed)) return parsed.map((item) => (typeof item === "number" ? item : Number(item))).filter((item) => !Number.isNaN(item));
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
+
   useEffect(() => {
     const loadHistory = async () => {
       try {
@@ -125,12 +145,8 @@ export default function AdminPage() {
     const averages = questions.map((question, index) => {
       const values = completedResults
         .map((item) => {
-          try {
-            const times = JSON.parse(item.questionTimes || "[]");
-            return typeof times[index] === "number" ? times[index] : null;
-          } catch {
-            return null;
-          }
+          const times = parseQuestionTimes(item.questionTimes);
+          return typeof times[index] === "number" ? times[index] : null;
         })
         .filter((time): time is number => typeof time === "number" && time > 0);
 
@@ -243,7 +259,7 @@ export default function AdminPage() {
                 </tr>
               ) : (
                 history.map((row, idx) => {
-                  const answers = row.answersString ? row.answersString.split("") : [];
+                  const answers = parseAnswers(row.answersString);
                   while (answers.length < questions.length) answers.push("-");
                   return (
                     <tr key={idx} className="bg-white border-b border-gray-100 hover:bg-purple-50/30 transition-colors">
