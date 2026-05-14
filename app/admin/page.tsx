@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { questions } from "@/data/questions";
-import { Download, Lock, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { Download, Lock } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
