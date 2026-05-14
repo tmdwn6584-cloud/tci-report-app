@@ -22,7 +22,11 @@ export default function AdminPage() {
         console.error(err);
         const saved = localStorage.getItem("tci_history");
         if (saved) {
-          setHistory(JSON.parse(saved));
+          try {
+            setHistory(JSON.parse(saved));
+          } catch (parseError) {
+            console.warn("Invalid local tci_history data", parseError);
+          }
         }
       }
     };
