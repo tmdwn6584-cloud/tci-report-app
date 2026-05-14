@@ -99,7 +99,10 @@ function ResultContent() {
       return;
     }
 
-    const currentUrl = window.location.href;
+    const queryString = searchParams.toString();
+    const shareUrl = queryString
+      ? `${window.location.origin}/result?${queryString}`
+      : window.location.href;
     const imageUrl = `${window.location.origin}/og-image.png`;
     const shareTitle = "TCI 감정의 좌표";
     const shareDesc = `${name}님의 감정 흐름을 우아하게 읽어드립니다. 지금 결과를 확인해보세요.`;
@@ -114,16 +117,16 @@ function ResultContent() {
           imageWidth: 1200,
           imageHeight: 630,
           link: {
-            mobileWebUrl: currentUrl,
-            webUrl: currentUrl
+            mobileWebUrl: shareUrl,
+            webUrl: shareUrl
           }
         },
         buttons: [
           {
             title: "결과 보기",
             link: {
-              mobileWebUrl: currentUrl,
-              webUrl: currentUrl
+              mobileWebUrl: shareUrl,
+              webUrl: shareUrl
             }
           }
         ]
