@@ -1,51 +1,11 @@
-"use client";
+﻿"use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { questions } from "@/data/questions";
 import { Download, Lock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
-class AdminErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: Error | null }> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { error: null };
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { error };
-  }
-
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error("Admin page caught error:", error, info);
-  }
-
-  render() {
-    if (this.state.error) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7]">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-lg w-full text-center">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">오류가 발생했습니다</h2>
-            <p className="text-gray-500 mb-4">관리자 페이지를 불러오는 동안 문제가 발생했습니다.</p>
-            <pre className="text-left text-xs text-red-600 bg-red-50 p-4 rounded-lg overflow-x-auto">{this.state.error.message}</pre>
-            <button onClick={() => this.setState({ error: null })} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-xl">다시 시도</button>
-          </div>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
 export default function AdminPage() {
-  return (
-    <AdminErrorBoundary>
-      <AdminView />
-    </AdminErrorBoundary>
-  );
-}
-
-function AdminView() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [history, setHistory] = useState<any[]>([]);
@@ -86,6 +46,7 @@ function AdminView() {
         createdAt: typeof item.createdAt === "string" ? item.createdAt : undefined,
         answersString: typeof item.answersString === "string" ? item.answersString : "",
         questionTimes: item.questionTimes ?? [],
+        currentQuestionIndex: typeof item.currentQuestionIndex === "number" ? item.currentQuestionIndex : undefined,
       }));
   };
 
@@ -104,6 +65,7 @@ function AdminView() {
             setHistory(normalizeHistory(JSON.parse(saved)));
           } catch (parseError) {
             console.warn("Invalid local tci_history data", parseError);
+            localStorage.removeItem("tci_history");
             setHistory([]);
           }
         }
@@ -113,13 +75,12 @@ function AdminView() {
     loadHistory();
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password === "6448") {
       setIsAuthenticated(true);
       setError(false);
       sessionStorage.setItem("isAdmin", "true");
-      window.dispatchEvent(new Event("adminLoginStatusChanged"));
     } else {
       setError(true);
       setPassword("");
@@ -129,13 +90,11 @@ function AdminView() {
   const exportToCSV = () => {
     if (history.length === 0) return;
 
-    // Build CSV header
-    const headers = ["이름", "성별", "나이", "모드", "상태", "일시", ...questions.map(q => q.id)];
+    const headers = ["이름", "성별", "나이", "모드", "상태", "일시", ...questions.map((q) => q.id)];
     let csvContent = headers.join(",") + "\n";
 
-    // Build rows
     history.forEach((row) => {
-      const answers = row.answersString ? row.answersString.split("") : [];
+      const answers = parseAnswers(row.answersString);
       while (answers.length < questions.length) answers.push("");
       const rowData = [
         row.name,
@@ -144,7 +103,7 @@ function AdminView() {
         row.mode || "-",
         row.status || "-",
         row.date || row.finishedAt || row.createdAt || "-",
-        ...answers
+        ...answers,
       ];
       csvContent += rowData.join(",") + "\n";
     });
@@ -154,7 +113,6 @@ function AdminView() {
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
     link.setAttribute("download", "tci_results.csv");
-    link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -169,21 +127,17 @@ function AdminView() {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">관리자 로그인</h2>
           <p className="text-gray-500 text-sm mb-8">데이터 접근을 위해 비밀번호를 입력해주세요.</p>
-          
           <form onSubmit={handleLogin}>
-            <input 
-              type="password" 
+            <input
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호" 
-              className={`w-full px-4 py-3 rounded-xl border ${error ? 'border-red-400 bg-red-50' : 'border-gray-200'} focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all mb-4 text-center tracking-widest text-lg`}
+              placeholder="비밀번호"
+              className={`w-full px-4 py-3 rounded-xl border ${error ? "border-red-400 bg-red-50" : "border-gray-200"} focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all mb-4 text-center tracking-widest text-lg`}
               autoFocus
             />
             {error && <p className="text-red-500 text-sm mb-4">비밀번호가 일치하지 않습니다.</p>}
-            <button 
-              type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-xl shadow-sm transition-colors"
-            >
+            <button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-xl shadow-sm transition-colors">
               접속하기
             </button>
           </form>
@@ -195,7 +149,6 @@ function AdminView() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem("isAdmin");
-    window.dispatchEvent(new Event("adminLoginStatusChanged"));
   };
 
   const completedResults = history.filter((item) => item.status === "completed");
@@ -227,7 +180,7 @@ function AdminView() {
       if (item.status === "completed") return;
       const index = typeof item.currentQuestionIndex === "number"
         ? item.currentQuestionIndex
-        : Math.max(0, (item.answersString || "").replace(/0/g, "").length - 1);
+        : Math.max(0, (String(item.answersString || "")).replace(/0/g, "").length - 1);
       const question = questions[index]?.id?.toUpperCase() || "START";
       counts[question] = (counts[question] || 0) + 1;
     });
@@ -246,17 +199,11 @@ function AdminView() {
           <p className="text-gray-500">모든 응답자의 데이터를 엑셀(CSV) 형식으로 조회하고 다운로드할 수 있습니다.</p>
         </div>
         <div className="flex gap-3">
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
-          >
+          <button onClick={handleLogout} className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm">
             <Lock className="w-4 h-4" />
             로그아웃
           </button>
-          <button 
-            onClick={exportToCSV}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
-          >
+          <button onClick={exportToCSV} className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm">
             <Download className="w-4 h-4" />
             CSV 다운로드
           </button>
@@ -348,7 +295,6 @@ function AdminView() {
           </table>
         </div>
       </div>
-      
       <div className="mt-6 text-sm text-gray-500">
         * 표의 문항 ID(예: NS1, HA1)에 마우스를 올리면 전체 질문 내용을 확인할 수 있습니다.
       </div>
