@@ -66,13 +66,15 @@ function ResultContent() {
     setTimeout(() => setModal(prev => ({ ...prev, isOpen: false })), 4000);
   };
 
-  const KAKAO_JS_KEY = "eb6ebbac5f7b9fbffaab1831e460c4bf";
-
   const initializeKakao = () => {
     if (typeof window === "undefined") return;
     const kakao = (window as any).Kakao;
+    console.log("[Kakao Debug] Current browser URL:", window.location.href);
     if (kakao) {
-      if (!kakao.isInitialized()) kakao.init(KAKAO_JS_KEY);
+      console.log("[Kakao Debug] Kakao object detected:", kakao);
+      console.log("[Kakao Debug] isInitialized before init:", kakao.isInitialized?.());
+      if (!kakao.isInitialized()) kakao.init('eb6ebbac5f7b9fbffaab1831e460c4bf');
+      console.log("[Kakao Debug] isInitialized after init:", kakao.isInitialized?.());
       setKakaoReady(true);
     }
   };
@@ -81,7 +83,7 @@ function ResultContent() {
     if (typeof window === "undefined") return;
     const kakao = (window as any).Kakao;
     if (kakao) {
-      if (!kakao.isInitialized()) kakao.init(KAKAO_JS_KEY);
+      if (!kakao.isInitialized()) kakao.init('eb6ebbac5f7b9fbffaab1831e460c4bf');
       setKakaoReady(true);
     }
   }, []);
@@ -90,6 +92,8 @@ function ResultContent() {
     if (typeof window === "undefined") return;
 
     const kakao = (window as any).Kakao;
+    console.log("[Kakao Debug] currentUrl in share handler:", window.location.href);
+    console.log("[Kakao Debug] kakao.isInitialized():", kakao?.isInitialized?.());
     if (!kakao || !kakao.isInitialized()) {
       showModal("카카오톡 공유 기능을 초기화 중입니다. 잠시만 기다려주세요.", true);
       return;
