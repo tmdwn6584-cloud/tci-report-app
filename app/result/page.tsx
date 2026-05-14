@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense, useRef } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { questions } from "@/data/questions";
@@ -56,6 +57,7 @@ function ResultContent() {
   const [data, setData] = useState<any[]>([]);
   const [modal, setModal] = useState<{ isOpen: boolean, message: string, isError: boolean }>({ isOpen: false, message: "", isError: false });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [kakaoReady, setKakaoReady] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
   const photocardRef = useRef<HTMLDivElement>(null);
 
@@ -64,30 +66,68 @@ function ResultContent() {
     setTimeout(() => setModal(prev => ({ ...prev, isOpen: false })), 4000);
   };
 
+  const KAKAO_JS_KEY = "eb6ebbac5f7b9fbffaab1831e460c4bf";
+
+  const initializeKakao = () => {
+    if (typeof window === "undefined") return;
+    const kakao = (window as any).Kakao;
+    if (kakao) {
+      if (!kakao.isInitialized()) kakao.init(KAKAO_JS_KEY);
+      setKakaoReady(true);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const kakao = (window as any).Kakao;
+    if (kakao) {
+      if (!kakao.isInitialized()) kakao.init(KAKAO_JS_KEY);
+      setKakaoReady(true);
+    }
+  }, []);
+
   const handleShareKakao = async () => {
-    if (!photocardRef.current) return;
+    if (typeof window === "undefined") return;
+
+    const kakao = (window as any).Kakao;
+    if (!kakao || !kakao.isInitialized()) {
+      showModal("카카오톡 공유 기능을 초기화 중입니다. 잠시만 기다려주세요.", true);
+      return;
+    }
+
+    const currentUrl = window.location.href;
+    const imageUrl = `${window.location.origin}/og-image.png`;
+    const shareTitle = "TCI 감정의 좌표";
+    const shareDesc = `${name}님의 감정 흐름을 우아하게 읽어드립니다. 지금 결과를 확인해보세요.`;
+
     try {
-      showModal("포토카드를 준비 중입니다...", false);
-      const imageBlob = await htmlToImage.toBlob(photocardRef.current, { pixelRatio: 1 });
-      if (!imageBlob) throw new Error("Blob creation failed");
-
-      const file = new File([imageBlob], `${name}_감정흐름포토카드.png`, { type: 'image/png' });
-
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          title: 'TCI LAB 리포트',
-          text: `${name}님의 감정 흐름 분석 결과입니다!`,
-          files: [file]
-        });
-        showModal("성공적으로 공유되었습니다!", false);
-      } else {
-        const url = URL.createObjectURL(imageBlob);
-        setPreviewImage(url);
-        showModal("이미지를 꾹 눌러서 저장/복사 후 공유해주세요!", false);
-      }
+      kakao.Link.sendDefault({
+        objectType: "feed",
+        content: {
+          title: shareTitle,
+          description: shareDesc,
+          imageUrl,
+          imageWidth: 1200,
+          imageHeight: 630,
+          link: {
+            mobileWebUrl: currentUrl,
+            webUrl: currentUrl
+          }
+        },
+        buttons: [
+          {
+            title: "결과 보기",
+            link: {
+              mobileWebUrl: currentUrl,
+              webUrl: currentUrl
+            }
+          }
+        ]
+      });
+      showModal("카카오톡 공유창이 열렸습니다.", false);
     } catch (err) {
-      console.error('Share failed', err);
-      showModal("이미지 생성에 실패했습니다.", true);
+      console.error("Kakao share failed", err);
+      showModal("카카오톡 공유에 실패했습니다. 다시 시도해주세요.", true);
     }
   };
 
@@ -147,7 +187,8 @@ function ResultContent() {
         <div className="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-purple-200/30 rounded-full blur-[80px] md:blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[200px] md:w-[400px] h-[200px] md:h-[400px] bg-blue-200/30 rounded-full blur-[80px] md:blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
         
-        <div className="relative z-10 p-6 md:p-16 max-w-5xl mx-auto h-full flex flex-col justify-center items-center text-center">
+        <Script src="https://developers.kakao.com/sdk/js/kakao.min.js" strategy="afterInteractive" onLoad={initializeKakao} />
+      <div className="relative z-10 p-6 md:p-16 max-w-5xl mx-auto h-full flex flex-col justify-center items-center text-center">
           <div className="inline-block px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-white/60 backdrop-blur border border-white/50 text-purple-600 text-[10px] md:text-xs font-semibold tracking-wider mb-4 md:mb-6 shadow-sm">
             EMOTIONAL INSIGHT REPORT
           </div>
