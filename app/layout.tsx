@@ -3,18 +3,18 @@ import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "TCI LAB - 프리미엄 성향 리포트",
-  description: "감정의 흐름을 말해주는 프리미엄 TCI 리포트로 나를 더 깊이 이해하세요.",
+  title: "TCI 감정의 좌표 - 감정 흐름 분석 서비스",
+  description: "당신의 감정 흐름을 우아하게 읽어드리는 TCI 감정의 좌표 리포트입니다.",
   openGraph: {
-    title: "TCI LAB - 감정 흐름 리포트",
-    description: "감정 패턴과 성향을 시각화하는 프리미엄 분석 리포트로 나를 발견하세요.",
+    title: "TCI 감정의 좌표 - 감정 흐름 분석 서비스",
+    description: "감정의 미세한 흐름을 섬세하게 분석하고, 나만의 감정 지도를 완성해보세요.",
     images: ["/og-image.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TCI LAB - 감정 흐름 리포트",
-    description: "감정 패턴과 성향을 시각화하는 프리미엄 분석 리포트로 나를 발견하세요.",
+    title: "TCI 감정의 좌표 - 감정 흐름 분석 서비스",
+    description: "감정의 미세한 흐름을 섬세하게 분석하고, 나만의 감정 지도를 완성해보세요.",
     images: ["/og-image.png"],
   },
 };

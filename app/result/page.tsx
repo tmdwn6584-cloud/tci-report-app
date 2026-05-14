@@ -445,8 +445,8 @@ function ResultContent() {
 
             {/* Footer */}
             <div className="z-10 w-full flex flex-col items-center mb-16 mt-16">
-              <p className="text-4xl font-bold text-gray-800">TCI LAB</p>
-              <p className="text-3xl text-gray-500 mt-4 font-light">나만의 감정 흐름 분석하기</p>
+              <p className="text-4xl font-bold text-gray-800">TCI 감정의 좌표</p>
+              <p className="text-3xl text-gray-500 mt-4 font-light">당신의 감정 흐름을 정성껏 읽어드립니다</p>
               <div className="mt-8 px-8 py-4 bg-gray-900 rounded-full">
                 <p className="text-2xl text-white font-medium tracking-wide">tci-report-app.vercel.app</p>
               </div>

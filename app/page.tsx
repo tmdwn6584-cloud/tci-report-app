@@ -52,17 +52,17 @@ export default function Home() {
       >
         <div className="bg-white/60 backdrop-blur-xl border border-white p-6 md:p-14 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_8px_40px_rgb(0,0,0,0.03)] text-center w-full">
           <div className="inline-block px-3 py-1.5 md:px-4 rounded-full bg-purple-50 text-purple-600 text-[10px] md:text-xs font-semibold tracking-wider mb-6 md:mb-8">
-            PREMIUM EMOTIONAL INSIGHT
+            TCI 감정의 좌표
           </div>
           
           <h1 className="text-2xl md:text-4xl font-light text-gray-800 mb-4 md:mb-6 leading-snug md:leading-tight tracking-tight break-keep">
-            당신의 성격이 아니라,<br />
-            당신의 <span className="font-semibold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">감정 흐름</span>을 읽습니다.
+            당신의 감정의 좌표를,<br />
+            부드럽고 우아하게 <span className="font-semibold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">읽어드립니다</span>.
           </h1>
           
           <p className="text-gray-500 mb-8 md:mb-10 text-sm md:text-lg font-light leading-relaxed break-keep">
-            왜 특정 관계를 오래 못 놓는지,<br className="hidden md:block" />
-            당신의 심리 구조 안에서 다정하게 설명해 드립니다.
+            멀어진 관계의 흔적부터,<br className="hidden md:block" />
+            마음 속 감정의 흐름을 조용히 함께 탐색합니다.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-left w-full">
@@ -146,8 +146,8 @@ export default function Home() {
           </div>
           
           <div className="mt-10 text-[10px] md:text-xs text-gray-400/80 font-light leading-relaxed break-keep px-4">
-            <p>TCI의 7개 기질 구조를 참고해 제작된 감정 흐름 분석 검사입니다.</p>
-            <p className="mt-1">의학적 진단 목적이 아닌 자기이해 기반 감정 흐름 분석 리포트입니다.</p>
+            <p>TCI 감정의 좌표는 TCI 7개 기질 구조를 바탕으로 감정 흐름을 섬세하게 탐색합니다.</p>
+            <p className="mt-1">의학적 진단 목적이 아닌, 자기 이해와 감정 흐름 공감을 위한 리포트입니다.</p>
           </div>
         </div>
       </motion.div>

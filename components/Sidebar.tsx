@@ -37,7 +37,7 @@ export function Sidebar() {
       <div className="flex md:flex-col w-full md:w-auto h-full md:h-auto">
         <div className="hidden md:flex h-20 items-center px-8 border-b border-gray-50 mb-6">
           <div className="flex items-center gap-2 text-xl font-bold text-gray-800">
-            <span className="text-purple-600 text-2xl">✤</span> TCI LAB
+            <span className="text-purple-600 text-2xl">✤</span> TCI 감정의 좌표
           </div>
         </div>
         
