@@ -1,11 +1,51 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { questions } from "@/data/questions";
 import { Download, Lock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
+class AdminErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: Error | null }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error("Admin page caught error:", error, info);
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7]">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-lg w-full text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">오류가 발생했습니다</h2>
+            <p className="text-gray-500 mb-4">관리자 페이지를 불러오는 동안 문제가 발생했습니다.</p>
+            <pre className="text-left text-xs text-red-600 bg-red-50 p-4 rounded-lg overflow-x-auto">{this.state.error.message}</pre>
+            <button onClick={() => this.setState({ error: null })} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-xl">다시 시도</button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 export default function AdminPage() {
+  return (
+    <AdminErrorBoundary>
+      <AdminView />
+    </AdminErrorBoundary>
+  );
+}
+
+function AdminView() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [history, setHistory] = useState<any[]>([]);
