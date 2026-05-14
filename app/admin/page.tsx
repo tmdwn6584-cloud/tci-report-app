@@ -31,21 +31,40 @@ export default function AdminPage() {
     return [];
   };
 
+  const normalizeHistory = (raw: unknown): any[] => {
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .filter((item): item is Record<string, unknown> => item !== null && typeof item === "object")
+      .map((item) => ({
+        name: typeof item.name === "string" ? item.name : "-",
+        gender: typeof item.gender === "string" ? item.gender : "-",
+        age: typeof item.age === "string" ? item.age : "-",
+        mode: typeof item.mode === "string" ? item.mode : "-",
+        status: typeof item.status === "string" ? item.status : "-",
+        date: typeof item.date === "string" ? item.date : undefined,
+        finishedAt: typeof item.finishedAt === "string" ? item.finishedAt : undefined,
+        createdAt: typeof item.createdAt === "string" ? item.createdAt : undefined,
+        answersString: typeof item.answersString === "string" ? item.answersString : "",
+        questionTimes: item.questionTimes ?? [],
+      }));
+  };
+
   useEffect(() => {
     const loadHistory = async () => {
       try {
         const res = await fetch("/api/results");
         if (!res.ok) throw new Error("Failed to load results");
         const json = await res.json();
-        setHistory(json);
+        setHistory(normalizeHistory(json));
       } catch (err) {
         console.error(err);
         const saved = localStorage.getItem("tci_history");
         if (saved) {
           try {
-            setHistory(JSON.parse(saved));
+            setHistory(normalizeHistory(JSON.parse(saved)));
           } catch (parseError) {
             console.warn("Invalid local tci_history data", parseError);
+            setHistory([]);
           }
         }
       }
