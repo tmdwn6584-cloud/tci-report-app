@@ -125,9 +125,12 @@ function ResultContent() {
         ]
       });
       showModal("카카오톡 공유창이 열렸습니다.", false);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Kakao share failed", err);
-      showModal("카카오톡 공유에 실패했습니다. 다시 시도해주세요.", true);
+      const message = err?.message?.includes("4019")
+        ? "카카오 앱 설정에서 도메인을 등록해야 합니다. 앱 관리 페이지에서 JavaScript 키와 도메인을 확인해주세요."
+        : "카카오톡 공유에 실패했습니다. 다시 시도해주세요.";
+      showModal(message, true);
     }
   };
 

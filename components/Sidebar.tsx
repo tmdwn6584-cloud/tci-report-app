@@ -24,7 +24,6 @@ export function Sidebar() {
   const navItems = [
     { href: "/", label: "홈", icon: Home },
     { href: "/guide", label: "가이드", icon: BookOpen },
-    { href: "/test", label: "검사하기", icon: ClipboardList },
     { href: "/result", label: "결과보기", icon: BarChart2 },
   ];
 
