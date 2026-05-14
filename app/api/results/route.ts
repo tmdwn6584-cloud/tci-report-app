@@ -1,4 +1,7 @@
-import db from "@/lib/db";
+import { NextResponse } from "next/server";
+
+// Vercel 환경에서는 localStorage 대신 메모리 기반 저장소 사용
+let memoryStorage: any[] = [];
 
 const parseRequestBody = async (req: Request) => {
   const contentType = req.headers.get("content-type") || "";
@@ -15,8 +18,8 @@ const parseRequestBody = async (req: Request) => {
 };
 
 export async function GET() {
-  const rows = db.prepare("SELECT * FROM sessions ORDER BY createdAt DESC").all();
-  return new Response(JSON.stringify(rows), { headers: { "Content-Type": "application/json" } });
+  // Vercel에서는 메모리 저장소에서 데이터 반환
+  return new Response(JSON.stringify(memoryStorage), { headers: { "Content-Type": "application/json" } });
 }
 
 export async function POST(req: Request) {
@@ -39,30 +42,7 @@ export async function POST(req: Request) {
   const totalAnswered = answersString.split("").filter((value: string) => value !== "0" && value !== "").length;
   const now = new Date().toISOString();
 
-  db.prepare(`
-    INSERT INTO sessions (
-      id, name, gender, age, mode, status, startedAt, finishedAt,
-      currentQuestionIndex, totalAnswered, answersString, questionTimes,
-      createdAt, updatedAt
-    ) VALUES (
-      @id, @name, @gender, @age, @mode, @status, @startedAt, @finishedAt,
-      @currentQuestionIndex, @totalAnswered, @answersString, @questionTimes,
-      @createdAt, @updatedAt
-    )
-    ON CONFLICT(id) DO UPDATE SET
-      name = excluded.name,
-      gender = excluded.gender,
-      age = excluded.age,
-      mode = excluded.mode,
-      status = excluded.status,
-      startedAt = excluded.startedAt,
-      finishedAt = excluded.finishedAt,
-      currentQuestionIndex = excluded.currentQuestionIndex,
-      totalAnswered = excluded.totalAnswered,
-      answersString = excluded.answersString,
-      questionTimes = excluded.questionTimes,
-      updatedAt = excluded.updatedAt
-  `).run({
+  const sessionData = {
     id: sessionId,
     name,
     gender,
@@ -77,7 +57,15 @@ export async function POST(req: Request) {
     questionTimes,
     createdAt: now,
     updatedAt: now,
-  });
+  };
+
+  // 메모리 저장소에서 기존 세션 찾기
+  const existingIndex = memoryStorage.findIndex(item => item.id === sessionId);
+  if (existingIndex >= 0) {
+    memoryStorage[existingIndex] = sessionData;
+  } else {
+    memoryStorage.push(sessionData);
+  }
 
   return new Response(JSON.stringify({ success: true, id: sessionId }), { headers: { "Content-Type": "application/json" } });
 }
