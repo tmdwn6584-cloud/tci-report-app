@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { questions } from "@/data/questions";
 import { Download, Lock } from "lucide-react";
 
 type ResultRecord = {
@@ -41,13 +42,35 @@ const parseAnswers = (value: unknown) => {
   return [];
 };
 
+const answerLabelMap: Record<string, string> = {
+  "1": "전혀 아니다",
+  "2": "아니다",
+  "3": "그렇다",
+  "4": "매우 그렇다",
+};
+
+const formatAnswerLabel = (value: string) => answerLabelMap[value] ?? value;
+
 const downloadCSV = (history: ResultRecord[]) => {
-  const headers = ["id", "name", "gender", "age", "mode", "status", "date", "answers"];
+  const headers = ["id", "name", "gender", "age", "mode", "status", "date", "detail"];
   let csv = headers.join(",") + "\n";
 
   history.forEach((item) => {
-    const answers = parseAnswers(item.answersString).join("-");
-    const row = [item.id, item.name, item.gender, item.age, item.mode, item.status, item.date || item.finishedAt || item.createdAt, answers];
+    const answers = parseAnswers(item.answersString).map((value, index) => {
+      const question = questions[index]?.text || `Q${index + 1}`;
+      return `${question} : ${formatAnswerLabel(value)}`;
+    }).join(" | ");
+
+    const row = [
+      item.id,
+      item.name,
+      item.gender,
+      item.age,
+      item.mode,
+      item.status,
+      item.date || item.finishedAt || item.createdAt || "-",
+      answers,
+    ];
     csv += row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",") + "\n";
   });
 
@@ -64,8 +87,18 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [history, setHistory] = useState<ResultRecord[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const selectedRecord = history.find((item) => item.id === selectedId) ?? null;
+
+  const detailedAnswers = selectedRecord
+    ? parseAnswers(selectedRecord.answersString).map((value, index) => ({
+        question: questions[index]?.text ?? `문항 ${index + 1}`,
+        answer: formatAnswerLabel(value),
+      }))
+    : [];
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -102,6 +135,7 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    setSelectedId(null);
     setError(null);
   };
 
@@ -139,7 +173,7 @@ export default function AdminPage() {
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">관리자 대시보드</h1>
-            <p className="text-gray-600 mt-2">사용자 응답 데이터를 안전하게 확인하고 CSV로 다운로드할 수 있습니다.</p>
+            <p className="text-gray-600 mt-2">사용자 응답 데이터를 안전하게 확인하고 질문별 답변을 자세히 분석할 수 있습니다.</p>
           </div>
           <div className="flex gap-3">
             <button onClick={() => downloadCSV(history)} className="px-5 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition">CSV 다운로드</button>
@@ -147,49 +181,80 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">응답자 기록</h2>
-          </div>
-          <div className="p-4">
-            {loading ? (
-              <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
-            ) : error ? (
-              <p className="text-red-600">{error}</p>
-            ) : history.length === 0 ? (
-              <p className="text-gray-500">저장된 결과가 없습니다.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-4 py-3 font-semibold">ID</th>
-                      <th className="px-4 py-3 font-semibold">이름</th>
-                      <th className="px-4 py-3 font-semibold">성별</th>
-                      <th className="px-4 py-3 font-semibold">나이</th>
-                      <th className="px-4 py-3 font-semibold">모드</th>
-                      <th className="px-4 py-3 font-semibold">상태</th>
-                      <th className="px-4 py-3 font-semibold">일시</th>
-                      <th className="px-4 py-3 font-semibold">응답</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {history.map((item) => (
-                      <tr key={item.id} className="border-t border-gray-100 hover:bg-gray-50 transition">
-                        <td className="px-4 py-3">{item.id}</td>
-                        <td className="px-4 py-3">{item.name}</td>
-                        <td className="px-4 py-3">{item.gender}</td>
-                        <td className="px-4 py-3">{item.age}</td>
-                        <td className="px-4 py-3">{item.mode}</td>
-                        <td className="px-4 py-3">{item.status}</td>
-                        <td className="px-4 py-3">{item.date || item.finishedAt || item.createdAt || "-"}</td>
-                        <td className="px-4 py-3 break-words max-w-[280px]">{parseAnswers(item.answersString).join("-")}</td>
+        <div className="grid gap-6 xl:grid-cols-[1.5fr_0.8fr]">
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-4 border-b border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-900">응답자 기록</h2>
+            </div>
+            <div className="p-4">
+              {loading ? (
+                <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
+              ) : error ? (
+                <p className="text-red-600">{error}</p>
+              ) : history.length === 0 ? (
+                <p className="text-gray-500">저장된 결과가 없습니다.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-left text-sm text-gray-700">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 font-semibold">ID</th>
+                        <th className="px-4 py-3 font-semibold">이름</th>
+                        <th className="px-4 py-3 font-semibold">모드</th>
+                        <th className="px-4 py-3 font-semibold">상태</th>
+                        <th className="px-4 py-3 font-semibold">일시</th>
+                        <th className="px-4 py-3 font-semibold">상세</th>
                       </tr>
+                    </thead>
+                    <tbody>
+                      {history.map((item) => (
+                        <tr key={item.id} className="border-t border-gray-100 hover:bg-gray-50 transition">
+                          <td className="px-4 py-3">{item.id}</td>
+                          <td className="px-4 py-3">{item.name}</td>
+                          <td className="px-4 py-3">{item.mode}</td>
+                          <td className="px-4 py-3">{item.status}</td>
+                          <td className="px-4 py-3">{item.date || item.finishedAt || item.createdAt || "-"}</td>
+                          <td className="px-4 py-3">
+                            <button
+                              onClick={() => setSelectedId(item.id === selectedId ? null : item.id)}
+                              className="px-3 py-2 bg-purple-600 text-white rounded-2xl hover:bg-purple-700 transition"
+                            >
+                              {item.id === selectedId ? "숨기기" : "보기"}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-4 border-b border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-900">질문별 응답 상세</h2>
+            </div>
+            <div className="p-4">
+              {selectedRecord ? (
+                <>
+                  <div className="mb-4 rounded-3xl border border-purple-100 bg-purple-50 p-4 text-sm text-purple-900">
+                    <p className="font-semibold">{selectedRecord.name}님의 응답</p>
+                    <p className="text-gray-600 mt-1">{selectedRecord.mode} / {selectedRecord.status}</p>
+                  </div>
+                  <div className="space-y-3">
+                    {detailedAnswers.map((item, index) => (
+                      <div key={index} className="rounded-3xl border border-gray-100 bg-gray-50 p-4">
+                        <p className="text-sm text-gray-500 mb-2">Q{index + 1}. {item.question}</p>
+                        <p className="text-sm font-semibold text-gray-900">답변: {item.answer}</p>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                  </div>
+                </>
+              ) : (
+                <p className="text-gray-500">표에서 개별 응답자를 선택하면 질문별 답변이 여기에 표시됩니다.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
