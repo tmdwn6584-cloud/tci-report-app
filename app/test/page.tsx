@@ -86,13 +86,18 @@ function TestContent() {
 
   const saveSession = async (payload: any) => {
     try {
-      await fetch("/api/results", {
+      const response = await fetch("/api/results", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      if (!response.ok) {
+        throw new Error("Failed to save session");
+      }
+      return await response.json();
     } catch (error) {
       console.error("Failed to save session", error);
+      return null;
     }
   };
 
@@ -132,7 +137,7 @@ function TestContent() {
     });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     // Check if all current page questions are answered
     const isAllAnswered = currentQuestions.every((_, idx) => answers[startIdx + idx] !== 0);
     
@@ -169,7 +174,7 @@ function TestContent() {
     } else {
       const answerString = answers.join("");
       const finishedAt = new Date().toISOString();
-      saveSession({
+      const result = await saveSession({
         type: "complete",
         sessionId,
         name,
@@ -183,14 +188,18 @@ function TestContent() {
         answersString: answerString,
         questionTimes,
       });
-      const params = new URLSearchParams({
-        n: name,
-        g: gender,
-        age: age,
-        mode,
-        a: answerString
-      });
-      router.push(`/result?${params.toString()}`);
+      if (result?.success && result.resultId) {
+        router.push(`/result/${result.resultId}`);
+      } else {
+        const params = new URLSearchParams({
+          n: name,
+          g: gender,
+          age: age,
+          mode,
+          a: answerString
+        });
+        router.push(`/result?${params.toString()}`);
+      }
     }
   };
 
