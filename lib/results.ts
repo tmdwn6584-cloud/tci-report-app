@@ -16,15 +16,17 @@ export type ResultStorageRecord = {
   updatedAt: string;
 };
 
-const SUPABASE_URL = (globalThis as any).process?.env?.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = (globalThis as any).process?.env?.SUPABASE_SERVICE_ROLE_KEY || (globalThis as any).process?.env?.SUPABASE_KEY;
+const env = ((globalThis as any).process?.env || {}) as Record<string, string | undefined>;
+const SUPABASE_URL = env.SUPABASE_URL || "";
+const SUPABASE_SERVICE_ROLE_KEY = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_KEY || "";
 const USE_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
 
 const memoryStorage: Array<ResultStorageRecord> = [];
 
 const supabaseHeaders = {
   Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-  apikey: SUPABASE_SERVICE_ROLE_KEY || "",
+  apikey: SUPABASE_SERVICE_ROLE_KEY,
+  Accept: "application/json",
   "Content-Type": "application/json",
   Prefer: "return=representation"
 };
