@@ -150,7 +150,34 @@ export default function ResultContent({ initialResultData }: ResultContentProps)
       return;
     }
 
-    const shareUrl = window.location.href;
+    let shareUrl = window.location.href;
+    
+    if (initialResultData && initialResultData.id) {
+      shareUrl = `${window.location.origin}/result/${initialResultData.id}`;
+    } else if (!window.location.href.includes('/result/')) {
+      showModal("결과 저장 중입니다. 잠시만 기다려주세요.", false);
+      try {
+        const response = await fetch('/api/results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: queryName,
+            gender: queryGender,
+            age: queryAge,
+            mode: queryMode,
+            answersString: data.join(''),
+            status: 'completed'
+          })
+        });
+        const result = await response.json();
+        if (result.id) {
+          shareUrl = `${window.location.origin}/result/${result.id}`;
+        }
+      } catch (err) {
+        console.error('Failed to save result for sharing:', err);
+      }
+    }
+
     const imageUrl = `${window.location.origin}/og-image.png`;
     const shareTitle = "TCI 감정의 좌표";
     const shareDesc = `${initialResultData?.name ?? queryName}님의 감정 흐름을 우아하게 읽어드립니다. 지금 결과를 확인해보세요.`;
